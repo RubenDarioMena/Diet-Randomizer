@@ -1,0 +1,265 @@
+{
+  "nombre": "Dieta PETRA",
+  "distribucion_comidas": {
+    "desayuno": {
+      "label": "Desayuno",
+      "porciones": {
+        "verduras": 1,
+        "cereales": 3,
+        "leguminosas": 1,
+        "aoa_mbag": 1,
+        "aoa_mag": 1,
+        "grasas_sin_proteina": 2,
+        "lacteos_semidescremados": 1
+      }
+    },
+    "colacion_1": {
+      "label": "Colación #1",
+      "porciones": {
+        "frutas": 1
+      }
+    },
+    "comida": {
+      "label": "Comida",
+      "porciones": {
+        "verduras": 2,
+        "cereales": 3,
+        "leguminosas": 1,
+        "aoa_bag": 2,
+        "grasas_sin_proteina": 2
+      }
+    },
+    "colacion_2": {
+      "label": "Colación #2",
+      "porciones": {
+        "frutas": 1
+      }
+    },
+    "cena": {
+      "label": "Cena",
+      "porciones": {
+        "verduras": 1,
+        "aoa_mbag": 1,
+        "cereales": 2,
+        "grasas_sin_proteina": 2
+      }
+    }
+  },
+  "grupos": {
+    "frutas": {
+      "label": "Frutas",
+      "color": "#4CAF93",
+      "alimentos": [
+        { "id": "fr01", "nombre": "Arándano fresco", "porcion": "1½ taza" },
+        { "id": "fr02", "nombre": "Blueberries", "porcion": "¾ taza" },
+        { "id": "fr03", "nombre": "Cereza", "porcion": "20 piezas" },
+        { "id": "fr04", "nombre": "Chicozapote", "porcion": "½ pieza" },
+        { "id": "fr05", "nombre": "Ciruela pasa sin hueso", "porcion": "7 piezas" },
+        { "id": "fr06", "nombre": "Durazno amarillo", "porcion": "2 piezas" },
+        { "id": "fr07", "nombre": "Fresa rebanada", "porcion": "1 taza" },
+        { "id": "fr08", "nombre": "Guayaba", "porcion": "3 piezas" },
+        { "id": "fr09", "nombre": "Kiwi", "porcion": "1½ pieza" },
+        { "id": "fr10", "nombre": "Mamey", "porcion": "⅓ pieza" },
+        { "id": "fr11", "nombre": "Mandarina", "porcion": "2 piezas" },
+        { "id": "fr12", "nombre": "Mango manila", "porcion": "1 pieza" },
+        { "id": "fr13", "nombre": "Mango petacón", "porcion": "½ pieza" },
+        { "id": "fr14", "nombre": "Manzana", "porcion": "1 pieza" },
+        { "id": "fr15", "nombre": "Melón picado", "porcion": "1 taza" },
+        { "id": "fr16", "nombre": "Moras", "porcion": "¾ taza" },
+        { "id": "fr17", "nombre": "Naranja", "porcion": "2 piezas" },
+        { "id": "fr18", "nombre": "Papaya picada", "porcion": "1 taza" },
+        { "id": "fr19", "nombre": "Pasas", "porcion": "10 piezas" },
+        { "id": "fr20", "nombre": "Pera", "porcion": "½ pieza" },
+        { "id": "fr21", "nombre": "Piña picada", "porcion": "¾ taza" },
+        { "id": "fr22", "nombre": "Plátano", "porcion": "½ pieza" },
+        { "id": "fr23", "nombre": "Plátano dominicano", "porcion": "3 piezas" },
+        { "id": "fr24", "nombre": "Sandía picada", "porcion": "1 taza" },
+        { "id": "fr25", "nombre": "Toronja", "porcion": "1 pieza" },
+        { "id": "fr26", "nombre": "Uva", "porcion": "18 piezas" }
+      ]
+    },
+    "verduras": {
+      "label": "Verduras",
+      "color": "#66BB6A",
+      "alimentos": [
+        { "id": "vd01", "nombre": "Acelga picada", "porcion": "½ taza" },
+        { "id": "vd02", "nombre": "Apio picado", "porcion": "¾ taza" },
+        { "id": "vd03", "nombre": "Berenjena cruda", "porcion": "1 taza" },
+        { "id": "vd04", "nombre": "Betabel crudo", "porcion": "¼ pieza" },
+        { "id": "vd05", "nombre": "Brócoli cocido", "porcion": "½ taza" },
+        { "id": "vd06", "nombre": "Calabacita alargada", "porcion": "1 pieza" },
+        { "id": "vd07", "nombre": "Champiñón rebanado", "porcion": "½ taza" },
+        { "id": "vd08", "nombre": "Chayote cocido", "porcion": "½ taza" },
+        { "id": "vd09", "nombre": "Chícharo cocido", "porcion": "⅓ taza" },
+        { "id": "vd10", "nombre": "Chile poblano", "porcion": "½ pieza" },
+        { "id": "vd11", "nombre": "Coliflor cocida", "porcion": "1 taza" },
+        { "id": "vd12", "nombre": "Ejotes cocidos", "porcion": "½ taza" },
+        { "id": "vd13", "nombre": "Espinaca cocida", "porcion": "½ taza" },
+        { "id": "vd14", "nombre": "Espinaca cruda", "porcion": "2 tazas" },
+        { "id": "vd15", "nombre": "Flor de calabaza cocida", "porcion": "1 taza" },
+        { "id": "vd16", "nombre": "Jícama picada", "porcion": "½ taza" },
+        { "id": "vd17", "nombre": "Jitomate bola", "porcion": "1 pieza" },
+        { "id": "vd18", "nombre": "Lechuga", "porcion": "3 tazas" },
+        { "id": "vd19", "nombre": "Nopal cocido", "porcion": "1 taza" },
+        { "id": "vd20", "nombre": "Pepino rebanado", "porcion": "1 taza" },
+        { "id": "vd21", "nombre": "Pimiento cocido", "porcion": "½ taza" },
+        { "id": "vd22", "nombre": "Poro crudo", "porcion": "¼ taza" },
+        { "id": "vd23", "nombre": "Tomate verde", "porcion": "5 piezas" },
+        { "id": "vd24", "nombre": "Verdolaga cocida", "porcion": "1 taza" },
+        { "id": "vd25", "nombre": "Zanahoria picada", "porcion": "½ taza" },
+        { "id": "vd26", "nombre": "Zanahoria rallada", "porcion": "½ taza" }
+      ]
+    },
+    "cereales": {
+      "label": "Cereales",
+      "color": "#FFA726",
+      "alimentos": [
+        { "id": "ce01", "nombre": "Alegría natural", "porcion": "5 cucharaditas" },
+        { "id": "ce02", "nombre": "Amaranto tostado", "porcion": "¼ taza" },
+        { "id": "ce03", "nombre": "Arroz cocido", "porcion": "¼ taza" },
+        { "id": "ce04", "nombre": "Arroz integral cocido", "porcion": "⅓ taza" },
+        { "id": "ce05", "nombre": "Atole en sobre", "porcion": "⅓ sobre" },
+        { "id": "ce06", "nombre": "Avena cocida", "porcion": "¾ taza" },
+        { "id": "ce07", "nombre": "Avena en hojuelas", "porcion": "½ taza" },
+        { "id": "ce08", "nombre": "Bolillo", "porcion": "⅓ pieza" },
+        { "id": "ce09", "nombre": "Camote cocido", "porcion": "⅓ taza" },
+        { "id": "ce10", "nombre": "Cereal sin azúcar", "porcion": "½ taza" },
+        { "id": "ce11", "nombre": "Elote desgranado cocido", "porcion": "½ taza" },
+        { "id": "ce12", "nombre": "Espagueti cocido", "porcion": "⅓ taza" },
+        { "id": "ce13", "nombre": "Galletas marías", "porcion": "5 piezas" },
+        { "id": "ce14", "nombre": "Palomitas naturales", "porcion": "2½ tazas" },
+        { "id": "ce15", "nombre": "Pan de hamburguesa chico", "porcion": "½ pieza" },
+        { "id": "ce16", "nombre": "Pan integral", "porcion": "1 rebanada" },
+        { "id": "ce17", "nombre": "Pan tostado", "porcion": "1 rebanada" },
+        { "id": "ce18", "nombre": "Papa cocida", "porcion": "½ pieza" },
+        { "id": "ce19", "nombre": "Pasta cocida", "porcion": "½ taza" },
+        { "id": "ce20", "nombre": "Puré de papa", "porcion": "⅓ taza" },
+        { "id": "ce21", "nombre": "Tortilla de maíz", "porcion": "1 pieza" },
+        { "id": "ce22", "nombre": "Tostada de maíz horneada", "porcion": "2 piezas" }
+      ]
+    },
+    "leguminosas": {
+      "label": "Leguminosas",
+      "color": "#8D6E63",
+      "alimentos": [
+        { "id": "le01", "nombre": "Alubia cocida", "porcion": "½ taza" },
+        { "id": "le02", "nombre": "Frijol cocido", "porcion": "½ taza" },
+        { "id": "le03", "nombre": "Garbanzo cocido", "porcion": "½ taza" },
+        { "id": "le04", "nombre": "Haba de lima cocida", "porcion": "½ taza" },
+        { "id": "le05", "nombre": "Haba seca cocida", "porcion": "⅓ taza" },
+        { "id": "le06", "nombre": "Harina de lenteja", "porcion": "3 cucharadas" },
+        { "id": "le07", "nombre": "Harina de soya", "porcion": "4 cucharadas" },
+        { "id": "le08", "nombre": "Hummus", "porcion": "5 cucharadas" },
+        { "id": "le09", "nombre": "Lenteja cocida", "porcion": "½ taza" },
+        { "id": "le10", "nombre": "Soya cocida", "porcion": "⅓ taza" }
+      ]
+    },
+    "aoa_mbag": {
+      "label": "Proteína (muy bajo en grasa)",
+      "color": "#EF5350",
+      "alimentos": [
+        { "id": "mb01", "nombre": "Atún en lata", "porcion": "1 lata" },
+        { "id": "mb02", "nombre": "Bistec de res", "porcion": "30 g" },
+        { "id": "mb03", "nombre": "Carne molida de pollo", "porcion": "30 g" },
+        { "id": "mb04", "nombre": "Carne molida de pavo", "porcion": "30 g" },
+        { "id": "mb05", "nombre": "Cecina", "porcion": "25 g" },
+        { "id": "mb06", "nombre": "Clara de huevo", "porcion": "¼ taza" },
+        { "id": "mb07", "nombre": "Falda de res", "porcion": "35 g" },
+        { "id": "mb08", "nombre": "Filete de pescado", "porcion": "40 g" },
+        { "id": "mb09", "nombre": "Filete de res", "porcion": "30 g" },
+        { "id": "mb10", "nombre": "Maciza de res", "porcion": "25 g" },
+        { "id": "mb11", "nombre": "Machaca de res", "porcion": "15 g" },
+        { "id": "mb12", "nombre": "Pechuga de pavo s/piel", "porcion": "30 g" },
+        { "id": "mb13", "nombre": "Pechuga de pollo s/piel", "porcion": "30 g" },
+        { "id": "mb14", "nombre": "Pollo desmenuzado", "porcion": "30 g" },
+        { "id": "mb15", "nombre": "Punta de res", "porcion": "30 g" },
+        { "id": "mb16", "nombre": "Tampiqueña", "porcion": "¼ pieza" }
+      ]
+    },
+    "aoa_bag": {
+      "label": "Proteína (bajo en grasa)",
+      "color": "#EC407A",
+      "alimentos": [
+        { "id": "ba01", "nombre": "Arrachera de res", "porcion": "30 g" },
+        { "id": "ba02", "nombre": "Carne molida de res", "porcion": "40 g" },
+        { "id": "ba03", "nombre": "Falda de cerdo", "porcion": "40 g" },
+        { "id": "ba04", "nombre": "Filete de res", "porcion": "40 g" },
+        { "id": "ba05", "nombre": "Jamón de pavo", "porcion": "2 rebanadas" },
+        { "id": "ba06", "nombre": "Milanesa de cerdo", "porcion": "30 g" },
+        { "id": "ba07", "nombre": "Milanesa de ternera", "porcion": "35 g" },
+        { "id": "ba08", "nombre": "Muslo de pollo", "porcion": "½ pieza" },
+        { "id": "ba09", "nombre": "Pavo", "porcion": "45 g" },
+        { "id": "ba10", "nombre": "Pierna de cerdo", "porcion": "40 g" },
+        { "id": "ba11", "nombre": "Pierna de pollo s/piel", "porcion": "⅓ pieza" },
+        { "id": "ba12", "nombre": "Queso fresco", "porcion": "40 g" },
+        { "id": "ba13", "nombre": "Queso oaxaca", "porcion": "30 g" },
+        { "id": "ba14", "nombre": "Queso panela", "porcion": "40 g" },
+        { "id": "ba15", "nombre": "Ternera", "porcion": "35 g" },
+        { "id": "ba16", "nombre": "Trucha", "porcion": "70 g" }
+      ]
+    },
+    "aoa_mag": {
+      "label": "Proteína (moderado en grasa)",
+      "color": "#AB47BC",
+      "alimentos": [
+        { "id": "ma01", "nombre": "Bistec de bola", "porcion": "25 g" },
+        { "id": "ma02", "nombre": "Carne de suadero", "porcion": "30 g" },
+        { "id": "ma03", "nombre": "Carne deshebrada", "porcion": "30 g" },
+        { "id": "ma04", "nombre": "Costillitas de cerdo", "porcion": "50 g" },
+        { "id": "ma05", "nombre": "Huevo entero", "porcion": "1 pieza" },
+        { "id": "ma06", "nombre": "Muslo de pollo c/piel", "porcion": "⅓ pieza" },
+        { "id": "ma07", "nombre": "Queso monterrey", "porcion": "1 rebanada" },
+        { "id": "ma08", "nombre": "Sardinas en aceite", "porcion": "1 lata" },
+        { "id": "ma09", "nombre": "Sierra fileteada", "porcion": "35 g" },
+        { "id": "ma10", "nombre": "Sierra picada", "porcion": "35 g" }
+      ]
+    },
+    "grasas_sin_proteina": {
+      "label": "Grasas",
+      "color": "#FFD54F",
+      "alimentos": [
+        { "id": "gs01", "nombre": "Aceite de canola", "porcion": "1 cda cafetera" },
+        { "id": "gs02", "nombre": "Aceite de cártamo", "porcion": "1 cda cafetera" },
+        { "id": "gs03", "nombre": "Aceite de oliva", "porcion": "1 cda cafetera" },
+        { "id": "gs04", "nombre": "Aceite de spray", "porcion": "5 disparos" },
+        { "id": "gs05", "nombre": "Aguacate Hass", "porcion": "⅓ pieza" },
+        { "id": "gs06", "nombre": "Mantequilla", "porcion": "½ cda cafetera" }
+      ]
+    },
+    "grasas_con_proteina": {
+      "label": "Grasas con proteína",
+      "color": "#FFCC02",
+      "alimentos": [
+        { "id": "gp01", "nombre": "Ajonjolí tostado", "porcion": "5 cdas cafeteras" },
+        { "id": "gp02", "nombre": "Almendra", "porcion": "10 piezas" },
+        { "id": "gp03", "nombre": "Almendra tostada", "porcion": "10 cdas soperas" },
+        { "id": "gp04", "nombre": "Cacahuate c/cáscara", "porcion": "12 g" },
+        { "id": "gp05", "nombre": "Cacahuate s/cáscara", "porcion": "14 piezas" },
+        { "id": "gp06", "nombre": "Cacahuate tostado", "porcion": "12 piezas" },
+        { "id": "gp07", "nombre": "Chia", "porcion": "7 cdas cafeteras" },
+        { "id": "gp08", "nombre": "Mantequilla de cacahuate", "porcion": "2 cdas cafeteras" },
+        { "id": "gp09", "nombre": "Nuez castilla", "porcion": "3 piezas" },
+        { "id": "gp10", "nombre": "Nuez de la india", "porcion": "7 piezas" },
+        { "id": "gp11", "nombre": "Pepitas", "porcion": "1 cda sopera" },
+        { "id": "gp12", "nombre": "Pistache", "porcion": "18 piezas" }
+      ]
+    },
+    "lacteos_semidescremados": {
+      "label": "Lácteos semidescremados",
+      "color": "#90CAF9",
+      "alimentos": [
+        { "id": "lc01", "nombre": "Leche semidescremada", "porcion": "240 ml" },
+        { "id": "lc02", "nombre": "Yogur natural semidescremado", "porcion": "¾ taza" }
+      ]
+    }
+  },
+  "recomendaciones": [
+    "Prefiera cereales integrales (pan, pasta y arroz integral).",
+    "Priorice grasas vegetales (aceite de oliva, canola, aguacate).",
+    "Puede consumir máximo 1 taza de café de grano al día.",
+    "Consuma frutas y verduras, de preferencia crudas y con cáscara.",
+    "Evite alimentos altos en sodio (enlatados, embutidos, ultraprocesados).",
+    "Evite bebidas alcohólicas y productos de herbolaria.",
+    "Realice ejercicio de fuerza y resistencia de forma regular."
+  ]
+}

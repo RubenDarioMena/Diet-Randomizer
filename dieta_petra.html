@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>Dieta PETRA</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after {
+      margin: 0; padding: 0; box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    :root {
+      --bg:       #F6F2EB;
+      --surface:  #FFFFFF;
+      --green:    #2D6A4F;
+      --green-lt: #52B788;
+      --terra:    #C4713E;
+      --text:     #1C1C1C;
+      --muted:    #7A6F62;
+      --border:   #E5DDD3;
+      --shadow:   0 2px 14px rgba(0,0,0,0.07);
+      --r:        16px;
+    }
+
+    html, body { height: 100%; overflow: hidden; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      max-width: 480px;
+      margin: 0 auto;
+      height: 100dvh;
+      position: relative;
+    }
+
+    /* ── HEADER ── */
+    .header {
+      background: var(--green);
+      color: #fff;
+      padding: 14px 18px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+    .header-logo {
+      font-family: 'Fraunces', serif;
+      font-size: 21px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+    }
+    .header-sub {
+      font-size: 11px;
+      opacity: 0.75;
+      margin-top: 1px;
+      font-weight: 500;
+    }
+    .icon-btn {
+      background: rgba(255,255,255,0.15);
+      border: none; border-radius: 50%;
+      width: 38px; height: 38px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; font-size: 17px; color: #fff;
+      transition: background .15s;
+    }
+    .icon-btn:active { background: rgba(255,255,255,0.3); }
+
+    /* ── MEAL TABS ── */
+    .tabs {
+      display: flex;
+      gap: 7px;
+      padding: 11px 14px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .tabs::-webkit-scrollbar { display: none; }
+    .tab {
+      flex-shrink: 0;
+      padding: 7px 15px;
+      border-radius: 20px;
+      border: 2px solid var(--border);
+      background: transparent;
+      font-family: 'Nunito', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all .18s;
+      white-space: nowrap;
+    }
+    .tab.active {
+      background: var(--green);
+      border-color: var(--green);
+      color: #fff;
+    }
+    .tab:active { transform: scale(0.94); }
+
+    /* ── SCROLL AREA ── */
+    .scroll {
+      flex: 1;
+      overflow-y: auto;
+      padding: 14px 14px 8px;
+      overscroll-behavior: contain;
+    }
+
+    /* ── EMPTY STATE ── */
+    .empty {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 52px 28px;
+      text-align: center;
+      height: 100%;
+    }
+    .empty-icon { font-size: 60px; margin-bottom: 14px; }
+    .empty h2 {
+      font-family: 'Fraunces', serif;
+      font-size: 22px;
+      color: var(--green);
+      margin-bottom: 8px;
+    }
+    .empty p { color: var(--muted); font-size: 15px; line-height: 1.55; }
+
+    /* ── HINT ── */
+    .hint {
+      text-align: center;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 12px;
+      font-weight: 600;
+    }
+
+    /* ── FOOD CARD ── */
+    .food-card {
+      background: var(--surface);
+      border-radius: var(--r);
+      padding: 13px 14px;
+      margin-bottom: 10px;
+      box-shadow: var(--shadow);
+    }
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 11px;
+    }
+    .card-dot {
+      width: 9px; height: 9px;
+      border-radius: 50%; flex-shrink: 0;
+    }
+    .card-label {
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: var(--muted);
+    }
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    /* ── CHIP ── */
+    .chip {
+      display: flex;
+      flex-direction: column;
+      padding: 9px 13px;
+      border-radius: 11px;
+      border: 2px solid transparent;
+      background: var(--bg);
+      cursor: pointer;
+      transition: all .18s;
+      user-select: none;
+      position: relative;
+    }
+    .chip-name {
+      font-weight: 700;
+      font-size: 14px;
+      color: var(--text);
+      line-height: 1.2;
+    }
+    .chip-portion {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 3px;
+      font-weight: 500;
+    }
+    .chip.selected {
+      border-color: var(--terra);
+      background: #FDF0E8;
+    }
+    .chip.selected::after {
+      content: '↺';
+      position: absolute;
+      top: -7px; right: -7px;
+      background: var(--terra);
+      color: #fff;
+      width: 19px; height: 19px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .chip:active { transform: scale(0.95); }
+
+    /* ── BOTTOM BAR ── */
+    .bottom {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      padding: 11px 14px;
+      display: flex;
+      gap: 9px;
+      flex-shrink: 0;
+    }
+    .btn {
+      flex: 1;
+      padding: 13px;
+      border-radius: 13px;
+      border: none;
+      font-family: 'Nunito', sans-serif;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all .18s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+    }
+    .btn:active:not(:disabled) { transform: scale(0.96); }
+    .btn:disabled { opacity: 0.45; cursor: default; }
+    .btn-green  { background: var(--green); color: #fff; }
+    .btn-terra  { background: var(--terra); color: #fff; }
+    .btn-outline {
+      background: transparent;
+      color: var(--green);
+      border: 2.5px solid var(--green);
+    }
+
+    /* ── MODAL OVERLAY ── */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.45);
+      z-index: 200;
+      display: flex;
+      align-items: flex-end;
+      animation: fadeIn .2s;
+    }
+    .overlay.hidden { display: none; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    /* ── SHEET ── */
+    .sheet {
+      background: var(--surface);
+      border-radius: 22px 22px 0 0;
+      width: 100%;
+      max-height: 88vh;
+      overflow-y: auto;
+      padding: 8px 20px 32px;
+      animation: slideUp .28s cubic-bezier(.4,0,.2,1);
+    }
+    @keyframes slideUp {
+      from { transform: translateY(100%); }
+      to   { transform: translateY(0); }
+    }
+    .sheet-handle {
+      width: 38px; height: 4px;
+      background: var(--border);
+      border-radius: 2px;
+      margin: 10px auto 18px;
+    }
+    .sheet-title {
+      font-family: 'Fraunces', serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--green);
+      margin-bottom: 4px;
+    }
+    .sheet-sub {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 18px;
+      font-weight: 600;
+    }
+    .recipe-body {
+      font-size: 15px;
+      line-height: 1.75;
+      color: var(--text);
+    }
+    .recipe-body strong { color: var(--green); }
+
+    /* ── SETTINGS FORM ── */
+    .form-label {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+      display: block;
+    }
+    .input {
+      width: 100%;
+      padding: 13px 15px;
+      border-radius: 12px;
+      border: 2px solid var(--border);
+      font-family: 'Nunito', sans-serif;
+      font-size: 15px;
+      color: var(--text);
+      background: var(--bg);
+      outline: none;
+      transition: border-color .18s;
+      margin-bottom: 8px;
+    }
+    .input:focus { border-color: var(--green); }
+    .input-hint {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.5;
+      margin-bottom: 18px;
+    }
+    .btn-full {
+      width: 100%;
+      padding: 14px;
+      border-radius: 13px;
+      border: none;
+      font-family: 'Nunito', sans-serif;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+      margin-bottom: 9px;
+      transition: all .18s;
+    }
+    .btn-full:active { transform: scale(0.97); }
+    .btn-full.green { background: var(--green); color: #fff; }
+    .btn-full.ghost {
+      background: transparent;
+      color: var(--green);
+      border: 2.5px solid var(--border);
+    }
+
+    /* ── SPINNER ── */
+    .spin {
+      width: 28px; height: 28px;
+      border: 3px solid var(--border);
+      border-top-color: var(--green);
+      border-radius: 50%;
+      animation: rotate .7s linear infinite;
+    }
+    @keyframes rotate { to { transform: rotate(360deg); } }
+    .loading-center {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      padding: 48px 0;
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ────────── HEADER ────────── -->
+<header class="header">
+  <div>
+    <div class="header-logo">🥗 Dieta PETRA</div>
+    <div class="header-sub">Plan nutricional personalizado</div>
+  </div>
+  <button class="icon-btn" onclick="openSettings()" title="Configuración">⚙️</button>
+</header>
+
+<!-- ────────── MEAL TABS ────────── -->
+<div class="tabs" id="tabs"></div>
+
+<!-- ────────── SCROLL CONTENT ────────── -->
+<div class="scroll" id="content"></div>
+
+<!-- ────────── BOTTOM BAR ────────── -->
+<div class="bottom">
+  <button class="btn btn-green" id="btnRand" onclick="handleRandomize()">🎲 Randomizar</button>
+  <button class="btn btn-terra" id="btnRecipe" onclick="generateRecipe()" disabled>✨ Receta</button>
+</div>
+
+<!-- ────────── RECIPE MODAL ────────── -->
+<div class="overlay hidden" id="recipeOverlay" onclick="handleOverlayClick(event,'recipeOverlay')">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-title" id="recipeTitle">Receta</div>
+    <div class="sheet-sub" id="recipeSub"></div>
+    <div class="recipe-body" id="recipeBody"></div>
+    <button class="btn-full ghost" style="margin-top:20px" onclick="closeOverlay('recipeOverlay')">Cerrar</button>
+  </div>
+</div>
+
+<!-- ────────── SETTINGS MODAL ────────── -->
+<div class="overlay hidden" id="settingsOverlay" onclick="handleOverlayClick(event,'settingsOverlay')">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-title">⚙️ Configuración</div>
+    <p style="color:var(--muted);font-size:14px;margin:10px 0 18px;line-height:1.55">
+      Ingresa tu API Key de Gemini para generar recetas. Se guarda solo en este dispositivo, nunca se sube a ningún servidor.
+    </p>
+    <label class="form-label" for="keyInput">API Key de Gemini</label>
+    <input class="input" type="password" id="keyInput" placeholder="AIzaSy..." autocomplete="off" spellcheck="false">
+    <p class="input-hint">
+      🔒 Se guarda en el navegador (localStorage). Restringe tu key al dominio de esta app en
+      <strong>console.cloud.google.com</strong> para mayor seguridad.
+    </p>
+    <button class="btn-full green" onclick="saveKey()">Guardar</button>
+    <button class="btn-full ghost" onclick="closeOverlay('settingsOverlay')">Cancelar</button>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+//  DATA
+// ═══════════════════════════════════════════════════════════
+
+const GRUPOS = {
+  frutas: {
+    label: 'Frutas', color: '#E8704A',
+    alimentos: [
+      { id:'fr01', nombre:'Arándano fresco', porcion:'1½ taza' },
+      { id:'fr02', nombre:'Blueberries', porcion:'¾ taza' },
+      { id:'fr03', nombre:'Cereza', porcion:'20 piezas' },
+      { id:'fr04', nombre:'Chicozapote', porcion:'½ pieza' },
+      { id:'fr05', nombre:'Ciruela pasa s/hueso', porcion:'7 piezas' },
+      { id:'fr06', nombre:'Durazno amarillo', porcion:'2 piezas' },
+      { id:'fr07', nombre:'Fresa rebanada', porcion:'1 taza' },
+      { id:'fr08', nombre:'Guayaba', porcion:'3 piezas' },
+      { id:'fr09', nombre:'Kiwi', porcion:'1½ pieza' },
+      { id:'fr10', nombre:'Mamey', porcion:'⅓ pieza' },
+      { id:'fr11', nombre:'Mandarina', porcion:'2 piezas' },
+      { id:'fr12', nombre:'Mango manila', porcion:'1 pieza' },
+      { id:'fr13', nombre:'Mango petacón', porcion:'½ pieza' },
+      { id:'fr14', nombre:'Manzana', porcion:'1 pieza' },
+      { id:'fr15', nombre:'Melón picado', porcion:'1 taza' },
+      { id:'fr16', nombre:'Moras', porcion:'¾ taza' },
+      { id:'fr17', nombre:'Naranja', porcion:'2 piezas' },
+      { id:'fr18', nombre:'Papaya picada', porcion:'1 taza' },
+      { id:'fr19', nombre:'Pasas', porcion:'10 piezas' },
+      { id:'fr20', nombre:'Pera', porcion:'½ pieza' },
+      { id:'fr21', nombre:'Piña picada', porcion:'¾ taza' },
+      { id:'fr22', nombre:'Plátano', porcion:'½ pieza' },
+      { id:'fr23', nombre:'Plátano dominicano', porcion:'3 piezas' },
+      { id:'fr24', nombre:'Sandía picada', porcion:'1 taza' },
+      { id:'fr25', nombre:'Toronja', porcion:'1 pieza' },
+      { id:'fr26', nombre:'Uva', porcion:'18 piezas' }
+    ]
+  },
+  verduras: {
+    label: 'Verduras', color: '#52B788',
+    alimentos: [
+      { id:'vd01', nombre:'Acelga picada', porcion:'½ taza' },
+      { id:'vd02', nombre:'Apio picado', porcion:'¾ taza' },
+      { id:'vd03', nombre:'Berenjena cruda', porcion:'1 taza' },
+      { id:'vd04', nombre:'Betabel crudo', porcion:'¼ pieza' },
+      { id:'vd05', nombre:'Brócoli cocido', porcion:'½ taza' },
+      { id:'vd06', nombre:'Calabacita alargada', porcion:'1 pieza' },
+      { id:'vd07', nombre:'Champiñón rebanado', porcion:'½ taza' },
+      { id:'vd08', nombre:'Chayote cocido', porcion:'½ taza' },
+      { id:'vd09', nombre:'Chícharo cocido', porcion:'⅓ taza' },
+      { id:'vd10', nombre:'Chile poblano', porcion:'½ pieza' },
+      { id:'vd11', nombre:'Coliflor cocida', porcion:'1 taza' },
+      { id:'vd12', nombre:'Ejotes cocidos', porcion:'½ taza' },
+      { id:'vd13', nombre:'Espinaca cocida', porcion:'½ taza' },
+      { id:'vd14', nombre:'Espinaca cruda', porcion:'2 tazas' },
+      { id:'vd15', nombre:'Flor de calabaza cocida', porcion:'1 taza' },
+      { id:'vd16', nombre:'Jícama picada', porcion:'½ taza' },
+      { id:'vd17', nombre:'Jitomate bola', porcion:'1 pieza' },
+      { id:'vd18', nombre:'Lechuga', porcion:'3 tazas' },
+      { id:'vd19', nombre:'Nopal cocido', porcion:'1 taza' },
+      { id:'vd20', nombre:'Pepino rebanado', porcion:'1 taza' },
+      { id:'vd21', nombre:'Pimiento cocido', porcion:'½ taza' },
+      { id:'vd22', nombre:'Poro crudo', porcion:'¼ taza' },
+      { id:'vd23', nombre:'Tomate verde', porcion:'5 piezas' },
+      { id:'vd24', nombre:'Verdolaga cocida', porcion:'1 taza' },
+      { id:'vd25', nombre:'Zanahoria picada', porcion:'½ taza' },
+      { id:'vd26', nombre:'Zanahoria rallada', porcion:'½ taza' }
+    ]
+  },
+  cereales: {
+    label: 'Cereales', color: '#D4951A',
+    alimentos: [
+      { id:'ce01', nombre:'Alegría natural', porcion:'5 cucharaditas' },
+      { id:'ce02', nombre:'Amaranto tostado', porcion:'¼ taza' },
+      { id:'ce03', nombre:'Arroz cocido', porcion:'¼ taza' },
+      { id:'ce04', nombre:'Arroz integral cocido', porcion:'⅓ taza' },
+      { id:'ce05', nombre:'Atole en sobre', porcion:'⅓ sobre' },
+      { id:'ce06', nombre:'Avena cocida', porcion:'¾ taza' },
+      { id:'ce07', nombre:'Avena en hojuelas', porcion:'½ taza' },
+      { id:'ce08', nombre:'Bolillo', porcion:'⅓ pieza' },
+      { id:'ce09', nombre:'Camote cocido', porcion:'⅓ taza' },
+      { id:'ce10', nombre:'Cereal sin azúcar', porcion:'½ taza' },
+      { id:'ce11', nombre:'Elote desgranado cocido', porcion:'½ taza' },
+      { id:'ce12', nombre:'Espagueti cocido', porcion:'⅓ taza' },
+      { id:'ce13', nombre:'Galletas marías', porcion:'5 piezas' },
+      { id:'ce14', nombre:'Palomitas naturales', porcion:'2½ tazas' },
+      { id:'ce15', nombre:'Pan de hamburguesa chico', porcion:'½ pieza' },
+      { id:'ce16', nombre:'Pan integral', porcion:'1 rebanada' },
+      { id:'ce17', nombre:'Pan tostado', porcion:'1 rebanada' },
+      { id:'ce18', nombre:'Papa cocida', porcion:'½ pieza' },
+      { id:'ce19', nombre:'Pasta cocida', porcion:'½ taza' },
+      { id:'ce20', nombre:'Puré de papa', porcion:'⅓ taza' },
+      { id:'ce21', nombre:'Tortilla de maíz', porcion:'1 pieza' },
+      { id:'ce22', nombre:'Tostada de maíz horneada', porcion:'2 piezas' }
+    ]
+  },
+  leguminosas: {
+    label: 'Leguminosas', color: '#9C7A52',
+    alimentos: [
+      { id:'le01', nombre:'Alubia cocida', porcion:'½ taza' },
+      { id:'le02', nombre:'Frijol cocido', porcion:'½ taza' },
+      { id:'le03', nombre:'Garbanzo cocido', porcion:'½ taza' },
+      { id:'le04', nombre:'Haba de lima cocida', porcion:'½ taza' },
+      { id:'le05', nombre:'Haba seca cocida', porcion:'⅓ taza' },
+      { id:'le06', nombre:'Harina de lenteja', porcion:'3 cucharadas' },
+      { id:'le07', nombre:'Harina de soya', porcion:'4 cucharadas' },
+      { id:'le08', nombre:'Hummus', porcion:'5 cucharadas' },
+      { id:'le09', nombre:'Lenteja cocida', porcion:'½ taza' },
+      { id:'le10', nombre:'Soya cocida', porcion:'⅓ taza' }
+    ]
+  },
+  aoa_mbag: {
+    label: 'Proteína · muy bajo en grasa', color: '#E07070',
+    alimentos: [
+      { id:'mb01', nombre:'Atún en lata', porcion:'1 lata' },
+      { id:'mb02', nombre:'Bistec de res', porcion:'30 g' },
+      { id:'mb03', nombre:'Carne molida de pollo', porcion:'30 g' },
+      { id:'mb04', nombre:'Carne molida de pavo', porcion:'30 g' },
+      { id:'mb05', nombre:'Cecina', porcion:'25 g' },
+      { id:'mb06', nombre:'Clara de huevo', porcion:'¼ taza' },
+      { id:'mb07', nombre:'Falda de res', porcion:'35 g' },
+      { id:'mb08', nombre:'Filete de pescado', porcion:'40 g' },
+      { id:'mb09', nombre:'Filete de res', porcion:'30 g' },
+      { id:'mb10', nombre:'Maciza de res', porcion:'25 g' },
+      { id:'mb11', nombre:'Machaca de res', porcion:'15 g' },
+      { id:'mb12', nombre:'Pechuga de pavo s/piel', porcion:'30 g' },
+      { id:'mb13', nombre:'Pechuga de pollo s/piel', porcion:'30 g' },
+      { id:'mb14', nombre:'Pollo desmenuzado', porcion:'30 g' },
+      { id:'mb15', nombre:'Punta de res', porcion:'30 g' },
+      { id:'mb16', nombre:'Tampiqueña', porcion:'¼ pieza' }
+    ]
+  },
+  aoa_bag: {
+    label: 'Proteína · bajo en grasa', color: '#C9697A',
+    alimentos: [
+      { id:'ba01', nombre:'Arrachera de res', porcion:'30 g' },
+      { id:'ba02', nombre:'Carne molida de res', porcion:'40 g' },
+      { id:'ba03', nombre:'Falda de cerdo', porcion:'40 g' },
+      { id:'ba04', nombre:'Filete de res', porcion:'40 g' },
+      { id:'ba05', nombre:'Jamón de pavo', porcion:'2 rebanadas' },
+      { id:'ba06', nombre:'Milanesa de cerdo', porcion:'30 g' },
+      { id:'ba07', nombre:'Milanesa de ternera', porcion:'35 g' },
+      { id:'ba08', nombre:'Muslo de pollo', porcion:'½ pieza' },
+      { id:'ba09', nombre:'Pavo', porcion:'45 g' },
+      { id:'ba10', nombre:'Pierna de cerdo', porcion:'40 g' },
+      { id:'ba11', nombre:'Pierna de pollo s/piel', porcion:'⅓ pieza' },
+      { id:'ba12', nombre:'Queso fresco', porcion:'40 g' },
+      { id:'ba13', nombre:'Queso oaxaca', porcion:'30 g' },
+      { id:'ba14', nombre:'Queso panela', porcion:'40 g' },
+      { id:'ba15', nombre:'Ternera', porcion:'35 g' },
+      { id:'ba16', nombre:'Trucha', porcion:'70 g' }
+    ]
+  },
+  aoa_mag: {
+    label: 'Proteína · moderado en grasa', color: '#9B72CF',
+    alimentos: [
+      { id:'ma01', nombre:'Bistec de bola', porcion:'25 g' },
+      { id:'ma02', nombre:'Carne de suadero', porcion:'30 g' },
+      { id:'ma03', nombre:'Carne deshebrada', porcion:'30 g' },
+      { id:'ma04', nombre:'Costillitas de cerdo', porcion:'50 g' },
+      { id:'ma05', nombre:'Huevo entero', porcion:'1 pieza' },
+      { id:'ma06', nombre:'Muslo de pollo c/piel', porcion:'⅓ pieza' },
+      { id:'ma07', nombre:'Queso monterrey', porcion:'1 rebanada' },
+      { id:'ma08', nombre:'Sardinas en aceite', porcion:'1 lata' },
+      { id:'ma09', nombre:'Sierra fileteada', porcion:'35 g' },
+      { id:'ma10', nombre:'Sierra picada', porcion:'35 g' }
+    ]
+  },
+  grasas: {
+    label: 'Grasas sin proteína', color: '#C8A020',
+    alimentos: [
+      { id:'gs01', nombre:'Aceite de canola', porcion:'1 cda cafetera' },
+      { id:'gs02', nombre:'Aceite de cártamo', porcion:'1 cda cafetera' },
+      { id:'gs03', nombre:'Aceite de oliva', porcion:'1 cda cafetera' },
+      { id:'gs04', nombre:'Aceite de spray', porcion:'5 disparos' },
+      { id:'gs05', nombre:'Aguacate Hass', porcion:'⅓ pieza' },
+      { id:'gs06', nombre:'Mantequilla', porcion:'½ cda cafetera' }
+    ]
+  },
+  lacteos: {
+    label: 'Lácteos semidescremados', color: '#5B9EC9',
+    alimentos: [
+      { id:'lc01', nombre:'Leche semidescremada', porcion:'240 ml' },
+      { id:'lc02', nombre:'Yogur natural semidescremado', porcion:'¾ taza' }
+    ]
+  }
+};
+
+const MEALS = [
+  { id:'desayuno', label:'Desayuno', emoji:'🌅',
+    slots:[
+      { grupo:'verduras',   n:1 },
+      { grupo:'cereales',   n:3 },
+      { grupo:'leguminosas',n:1 },
+      { grupo:'aoa_mbag',   n:1 },
+      { grupo:'aoa_mag',    n:1 },
+      { grupo:'grasas',     n:2 },
+      { grupo:'lacteos',    n:1 }
+    ]
+  },
+  { id:'colacion1', label:'Colación 1', emoji:'🍎',
+    slots:[ { grupo:'frutas', n:1 } ]
+  },
+  { id:'comida', label:'Comida', emoji:'🍽️',
+    slots:[
+      { grupo:'verduras',   n:2 },
+      { grupo:'cereales',   n:3 },
+      { grupo:'leguminosas',n:1 },
+      { grupo:'aoa_bag',    n:2 },
+      { grupo:'grasas',     n:2 }
+    ]
+  },
+  { id:'colacion2', label:'Colación 2', emoji:'🥝',
+    slots:[ { grupo:'frutas', n:1 } ]
+  },
+  { id:'cena', label:'Cena', emoji:'🌙',
+    slots:[
+      { grupo:'verduras', n:1 },
+      { grupo:'aoa_mbag', n:1 },
+      { grupo:'cereales', n:2 },
+      { grupo:'grasas',   n:2 }
+    ]
+  }
+];
+
+// ═══════════════════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════════════════
+
+const S = {
+  meal:       'desayuno',
+  selections: {},          // { mealId: { grupoId: [item, ...] } }
+  picked:     new Set(),   // item IDs selected for re-roll
+  apiKey:     localStorage.getItem('petra_key') || '',
+};
+
+// ═══════════════════════════════════════════════════════════
+//  UTILS
+// ═══════════════════════════════════════════════════════════
+
+const meal  = id  => MEALS.find(m => m.id === id);
+const grupo = key => GRUPOS[key];
+
+function pick(arr, n) {
+  return [...arr].sort(() => Math.random() - .5).slice(0, Math.min(n, arr.length));
+}
+
+// ═══════════════════════════════════════════════════════════
+//  RENDER
+// ═══════════════════════════════════════════════════════════
+
+function renderTabs() {
+  document.getElementById('tabs').innerHTML = MEALS.map(m => `
+    <button class="tab ${m.id === S.meal ? 'active' : ''}" onclick="setMeal('${m.id}')">
+      ${m.emoji} ${m.label}
+    </button>
+  `).join('');
+}
+
+function renderContent() {
+  const sel = S.selections[S.meal];
+  const m   = meal(S.meal);
+  const el  = document.getElementById('content');
+
+  if (!sel) {
+    el.innerHTML = `
+      <div class="empty">
+        <div class="empty-icon">${m.emoji}</div>
+        <h2>${m.label}</h2>
+        <p>Toca <strong>Randomizar</strong> para ver qué comer hoy.</p>
+      </div>`;
+    document.getElementById('btnRecipe').disabled = true;
+    renderRandBtn();
+    return;
+  }
+
+  const hintText = S.picked.size > 0
+    ? `✅ ${S.picked.size} seleccionado${S.picked.size > 1 ? 's' : ''} — toca "Re-randomizar" para cambiarlos`
+    : `Toca un ingrediente para marcarlo y cambiarlo`;
+
+  let html = `<p class="hint">${hintText}</p>`;
+
+  m.slots.forEach(slot => {
+    const g     = grupo(slot.grupo);
+    const items = sel[slot.grupo] || [];
+    if (!g || !items.length) return;
+
+    html += `
+      <div class="food-card">
+        <div class="card-header">
+          <div class="card-dot" style="background:${g.color}"></div>
+          <span class="card-label">${g.label}</span>
+        </div>
+        <div class="chips">
+          ${items.map(item => `
+            <div class="chip ${S.picked.has(item.id) ? 'selected' : ''}"
+                 onclick="togglePick('${item.id}')">
+              <span class="chip-name">${item.nombre}</span>
+              <span class="chip-portion">${item.porcion}</span>
+            </div>
+          `).join('')}
+        </div>
+      </div>`;
+  });
+
+  el.innerHTML = html;
+  document.getElementById('btnRecipe').disabled = false;
+  renderRandBtn();
+}
+
+function renderRandBtn() {
+  const btn = document.getElementById('btnRand');
+  if (S.picked.size > 0) {
+    btn.textContent = `↺ Re-randomizar (${S.picked.size})`;
+    btn.className = 'btn btn-outline';
+  } else {
+    btn.innerHTML = '🎲 Randomizar';
+    btn.className = 'btn btn-green';
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+//  ACTIONS
+// ═══════════════════════════════════════════════════════════
+
+function setMeal(id) {
+  S.meal = id;
+  S.picked.clear();
+  renderTabs();
+  renderContent();
+}
+
+function handleRandomize() {
+  const m   = meal(S.meal);
+  const sel = S.selections[S.meal];
+
+  if (!sel || S.picked.size === 0) {
+    // Full randomize
+    const result = {};
+    m.slots.forEach(slot => {
+      result[slot.grupo] = pick(grupo(slot.grupo).alimentos, slot.n);
+    });
+    S.selections[S.meal] = result;
+  } else {
+    // Selective re-roll
+    m.slots.forEach(slot => {
+      const g        = grupo(slot.grupo);
+      const current  = sel[slot.grupo] || [];
+      const toSwap   = current.filter(i => S.picked.has(i.id));
+      if (!toSwap.length) return;
+
+      // Pool: all alimentos minus the ones we keep
+      const keepIds  = current.filter(i => !S.picked.has(i.id)).map(i => i.id);
+      const pool     = g.alimentos.filter(a => !keepIds.includes(a.id));
+      const fresh    = pick(pool, toSwap.length);
+
+      sel[slot.grupo] = current.map(i =>
+        S.picked.has(i.id) ? (fresh.shift() || i) : i
+      );
+    });
+  }
+
+  S.picked.clear();
+  renderContent();
+}
+
+function togglePick(id) {
+  S.picked.has(id) ? S.picked.delete(id) : S.picked.add(id);
+  renderContent();
+}
+
+// ═══════════════════════════════════════════════════════════
+//  GEMINI
+// ═══════════════════════════════════════════════════════════
+
+async function generateRecipe() {
+  if (!S.apiKey) { openSettings(); return; }
+
+  const m   = meal(S.meal);
+  const sel = S.selections[S.meal];
+  if (!sel) return;
+
+  const lines = [];
+  m.slots.forEach(slot => {
+    (sel[slot.grupo] || []).forEach(item => {
+      lines.push(`• ${item.nombre} (${item.porcion})`);
+    });
+  });
+
+  const prompt = `Eres un asistente de nutrición amigable que ayuda a personas mayores a llevar una dieta saludable.
+
+El usuario tiene estos ingredientes para su ${m.label}:
+${lines.join('\n')}
+
+Genera una receta práctica, deliciosa y fácil de preparar que use estos ingredientes respetando las porciones indicadas.
+
+Estructura tu respuesta exactamente así:
+🍳 [Nombre de la receta]
+
+📋 Ingredientes
+[lista con porciones exactas]
+
+👨‍🍳 Preparación
+[pasos numerados, simples y claros, para personas mayores]
+
+💡 Tip
+[un consejo breve y motivador]
+
+Responde en español. Máximo 280 palabras. Sé cálido y alentador.`;
+
+  // Show loading
+  document.getElementById('recipeTitle').textContent = `${m.emoji} ${m.label}`;
+  document.getElementById('recipeSub').textContent = 'Generando con Gemini AI…';
+  document.getElementById('recipeBody').innerHTML = `
+    <div class="loading-center">
+      <div class="spin"></div>
+      Preparando tu receta…
+    </div>`;
+  openOverlay('recipeOverlay');
+
+  try {
+    const res = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${S.apiKey}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }] }],
+          generationConfig: { temperature: 0.8, maxOutputTokens: 700 }
+        })
+      }
+    );
+
+    const data = await res.json();
+    if (data.error) throw new Error(data.error.message);
+
+    const text = data.candidates?.[0]?.content?.parts?.[0]?.text || 'No se pudo generar la receta.';
+
+    const formatted = text
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\n/g, '<br>');
+
+    document.getElementById('recipeSub').textContent = 'Generado por Gemini AI';
+    document.getElementById('recipeBody').innerHTML = formatted;
+
+  } catch (err) {
+    document.getElementById('recipeSub').textContent = 'Error al generar';
+    document.getElementById('recipeBody').innerHTML = `
+      <div style="background:#FFF0F0;border-radius:10px;padding:14px;color:#B00;font-size:14px;line-height:1.55">
+        ⚠️ ${err.message}<br><br>
+        Verifica tu API Key en ⚙️ Configuración.
+      </div>`;
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+//  MODALS
+// ═══════════════════════════════════════════════════════════
+
+function openOverlay(id)  { document.getElementById(id).classList.remove('hidden'); }
+function closeOverlay(id) { document.getElementById(id).classList.add('hidden'); }
+
+function handleOverlayClick(e, id) {
+  if (e.target === document.getElementById(id)) closeOverlay(id);
+}
+
+function openSettings() {
+  document.getElementById('keyInput').value = S.apiKey;
+  openOverlay('settingsOverlay');
+}
+
+function saveKey() {
+  const key = document.getElementById('keyInput').value.trim();
+  S.apiKey  = key;
+  if (key) localStorage.setItem('petra_key', key);
+  else     localStorage.removeItem('petra_key');
+  closeOverlay('settingsOverlay');
+}
+
+// ═══════════════════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════════════════
+
+renderTabs();
+renderContent();
+
+if (!S.apiKey) {
+  setTimeout(() => openSettings(), 600);
+}
+</script>
+</body>
+</html>
