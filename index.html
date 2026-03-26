@@ -1,0 +1,1560 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>Dieta PETRA</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Nunito:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <style>
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    :root {
+      --bg: #F6F2EB;
+      --surface: #FFFFFF;
+      --green: #2D6A4F;
+      --green-lt: #52B788;
+      --terra: #C4713E;
+      --text: #1C1C1C;
+      --muted: #7A6F62;
+      --border: #E5DDD3;
+      --shadow: 0 2px 14px rgba(0, 0, 0, 0.07);
+      --r: 16px;
+    }
+
+    html,
+    body {
+      height: 100%;
+      overflow: hidden;
+    }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      max-width: 480px;
+      margin: 0 auto;
+      height: 100dvh;
+      position: relative;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+    }
+
+    /* ── HEADER ── */
+    .header {
+      background: var(--green);
+      color: #fff;
+      padding: 14px 18px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    .header-logo {
+      font-family: 'Fraunces', serif;
+      font-size: 21px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+    }
+
+    .header-sub {
+      font-size: 11px;
+      opacity: 0.75;
+      margin-top: 1px;
+      font-weight: 500;
+    }
+
+    .icon-btn {
+      background: rgba(255, 255, 255, 0.15);
+      border: none;
+      border-radius: 50%;
+      width: 38px;
+      height: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 17px;
+      color: #fff;
+      transition: background .15s;
+    }
+
+    .icon-btn:active {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    /* ── MEAL TABS ── */
+    .tabs {
+      display: flex;
+      gap: 7px;
+      padding: 11px 14px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .tabs::-webkit-scrollbar {
+      display: none;
+    }
+
+    .tab {
+      flex-shrink: 0;
+      padding: 7px 15px;
+      border-radius: 20px;
+      border: 2px solid var(--border);
+      background: transparent;
+      font-family: 'Nunito', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all .18s;
+      white-space: nowrap;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+    }
+
+    .tab.active {
+      background: var(--green);
+      border-color: var(--green);
+      color: #fff;
+    }
+
+    .tab:active {
+      transform: scale(0.94);
+    }
+
+    /* ── SCROLL AREA ── */
+    .scroll {
+      flex: 1;
+      overflow-y: auto;
+      padding: 14px 14px 8px;
+      overscroll-behavior: contain;
+    }
+
+    /* ── EMPTY STATE ── */
+    .empty {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 52px 28px;
+      text-align: center;
+      height: 100%;
+    }
+
+    .empty-icon {
+      font-size: 60px;
+      margin-bottom: 14px;
+    }
+
+    .empty h2 {
+      font-family: 'Fraunces', serif;
+      font-size: 22px;
+      color: var(--green);
+      margin-bottom: 8px;
+    }
+
+    .empty p {
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.55;
+    }
+
+    /* ── HINT ── */
+    .hint {
+      text-align: center;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 12px;
+      font-weight: 600;
+    }
+
+    /* ── FOOD CARD ── */
+    .food-card {
+      background: var(--surface);
+      border-radius: var(--r);
+      padding: 13px 14px;
+      margin-bottom: 10px;
+      box-shadow: var(--shadow);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 11px;
+    }
+
+    .card-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .card-label {
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: var(--muted);
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    /* ── CHIP ── */
+    .chip {
+      display: flex;
+      flex-direction: column;
+      padding: 9px 13px;
+      border-radius: 11px;
+      border: 2px solid transparent;
+      background: var(--bg);
+      cursor: pointer;
+      transition: all .18s;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+      position: relative;
+    }
+
+    .chip-name {
+      font-weight: 700;
+      font-size: 14px;
+      color: var(--text);
+      line-height: 1.2;
+    }
+
+    .chip-portion {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 3px;
+      font-weight: 500;
+    }
+
+    .chip.selected {
+      border-color: var(--terra);
+      background: #FDF0E8;
+    }
+
+    .chip.selected::after {
+      content: '↺';
+      position: absolute;
+      top: -7px;
+      right: -7px;
+      background: var(--terra);
+      color: #fff;
+      width: 19px;
+      height: 19px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .chip:active {
+      transform: scale(0.95);
+    }
+
+    /* ── BOTTOM BAR ── */
+    .bottom {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      padding: 11px 14px;
+      display: flex;
+      gap: 9px;
+      flex-shrink: 0;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 13px;
+      border-radius: 13px;
+      border: none;
+      font-family: 'Nunito', sans-serif;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all .18s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+    }
+
+    .btn:active:not(:disabled) {
+      transform: scale(0.96);
+    }
+
+    .btn:disabled {
+      opacity: 0.45;
+      cursor: default;
+    }
+
+    .btn-green {
+      background: var(--green);
+      color: #fff;
+    }
+
+    .btn-terra {
+      background: var(--terra);
+      color: #fff;
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--green);
+      border: 2.5px solid var(--green);
+    }
+
+    /* ── MODAL OVERLAY ── */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.45);
+      z-index: 200;
+      display: flex;
+      align-items: flex-end;
+      animation: fadeIn .2s;
+    }
+
+    .overlay.hidden {
+      display: none;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
+
+    /* ── SHEET ── */
+    .sheet {
+      background: var(--surface);
+      border-radius: 22px 22px 0 0;
+      width: 100%;
+      max-height: 88vh;
+      overflow-y: auto;
+      padding: 8px 20px 32px;
+      animation: slideUp .28s cubic-bezier(.4, 0, .2, 1);
+    }
+
+    @keyframes slideUp {
+      from {
+        transform: translateY(100%);
+      }
+
+      to {
+        transform: translateY(0);
+      }
+    }
+
+    .sheet-handle {
+      width: 38px;
+      height: 4px;
+      background: var(--border);
+      border-radius: 2px;
+      margin: 10px auto 18px;
+    }
+
+    .sheet-title {
+      font-family: 'Fraunces', serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--green);
+      margin-bottom: 4px;
+    }
+
+    .sheet-sub {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 18px;
+      font-weight: 600;
+    }
+
+    .recipe-body {
+      font-size: 15px;
+      line-height: 1.75;
+      color: var(--text);
+      user-select: text;
+      -webkit-user-select: text;
+    }
+
+    .recipe-body strong {
+      color: var(--green);
+    }
+
+    /* ── SETTINGS FORM ── */
+    .form-label {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    .input {
+      width: 100%;
+      padding: 13px 15px;
+      border-radius: 12px;
+      border: 2px solid var(--border);
+      font-family: 'Nunito', sans-serif;
+      font-size: 15px;
+      color: var(--text);
+      background: var(--bg);
+      outline: none;
+      transition: border-color .18s;
+      margin-bottom: 8px;
+    }
+
+    .input:focus {
+      border-color: var(--green);
+    }
+
+    .input-hint {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.5;
+      margin-bottom: 18px;
+    }
+
+    .btn-full {
+      width: 100%;
+      padding: 14px;
+      border-radius: 13px;
+      border: none;
+      font-family: 'Nunito', sans-serif;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+      margin-bottom: 9px;
+      transition: all .18s;
+    }
+
+    .btn-full:active {
+      transform: scale(0.97);
+    }
+
+    .btn-full.green {
+      background: var(--green);
+      color: #fff;
+    }
+
+    .btn-full.ghost {
+      background: transparent;
+      color: var(--green);
+      border: 2.5px solid var(--border);
+    }
+
+    /* ── SPINNER ── */
+    .spin {
+      width: 28px;
+      height: 28px;
+      border: 3px solid var(--border);
+      border-top-color: var(--green);
+      border-radius: 50%;
+      animation: rotate .7s linear infinite;
+    }
+
+    @keyframes rotate {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .loading-center {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      padding: 48px 0;
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    /* ── SWAP MENU ── */
+    .swap-list {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      max-height: 55vh;
+      overflow-y: auto;
+    }
+
+    .swap-option {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 14px;
+      border-radius: 11px;
+      background: var(--bg);
+      cursor: pointer;
+      transition: all .15s;
+      border: 2px solid transparent;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+    }
+
+    .swap-option:active {
+      transform: scale(0.97);
+    }
+
+    .swap-option.current {
+      border-color: var(--green-lt);
+      background: #E8F5EE;
+    }
+
+    .swap-option-name {
+      font-weight: 700;
+      font-size: 14px;
+      color: var(--text);
+    }
+
+    .swap-option-portion {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    /* ── ACTION BAR (Todos / Reinicio) ── */
+    .action-bar {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .action-btn {
+      flex: 1;
+      padding: 9px 10px;
+      border-radius: 10px;
+      border: 2px solid var(--border);
+      background: var(--surface);
+      font-family: 'Nunito', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all .15s;
+      text-align: center;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+    }
+
+    .action-btn:active {
+      transform: scale(0.95);
+    }
+
+    .action-btn.danger {
+      border-color: #E8704A;
+      color: #E8704A;
+    }
+
+    .action-btn.danger:active {
+      background: #FDF0E8;
+    }
+
+    /* ── RECIPE CARD (inline below ingredients) ── */
+    .recipe-card {
+      background: linear-gradient(135deg, #2D6A4F 0%, #52B788 100%);
+      border-radius: var(--r);
+      padding: 15px 16px;
+      margin-top: 6px;
+      margin-bottom: 10px;
+      box-shadow: var(--shadow);
+      cursor: pointer;
+      transition: all .18s;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+    }
+
+    .recipe-card:active {
+      transform: scale(0.97);
+    }
+
+    .recipe-card-icon {
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+
+    .recipe-card-text {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .recipe-card-label {
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      opacity: 0.8;
+    }
+
+    .recipe-card-title {
+      font-family: 'Fraunces', serif;
+      font-size: 16px;
+      font-weight: 700;
+      margin-top: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .recipe-card-arrow {
+      font-size: 18px;
+      opacity: 0.7;
+      flex-shrink: 0;
+    }
+
+    .recipe-generating {
+      background: var(--surface);
+      border: 2px dashed var(--border);
+      color: var(--muted);
+      justify-content: center;
+      cursor: default;
+    }
+
+    .recipe-generating:active {
+      transform: none;
+    }
+
+    /* ── FULLSCREEN RECIPE VIEW ── */
+    .recipe-fullscreen {
+      position: fixed;
+      inset: 0;
+      z-index: 300;
+      background: var(--bg);
+      display: flex;
+      flex-direction: column;
+      animation: fadeIn .2s;
+    }
+
+    .recipe-fullscreen.hidden {
+      display: none;
+    }
+
+    .recipe-fs-header {
+      background: var(--green);
+      color: #fff;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+
+    .recipe-fs-back {
+      background: rgba(255, 255, 255, 0.15);
+      border: none;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 18px;
+      color: #fff;
+      flex-shrink: 0;
+    }
+
+    .recipe-fs-back:active {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    .recipe-fs-title {
+      font-family: 'Fraunces', serif;
+      font-size: 18px;
+      font-weight: 700;
+      flex: 1;
+      /* Cambia nowrap por normal para que el título pueda usar 2 líneas si es necesario */
+      white-space: normal;
+      line-height: 1.2;
+    }
+
+    .recipe-fs-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 18px 18px 32px;
+      max-width: 480px;
+      margin: 0 auto;
+      width: 100%;
+      min-height: 0;
+      /* flexbox overflow fix */
+    }
+
+    .recipe-fs-body .recipe-body {
+      font-size: 15px;
+      line-height: 1.75;
+      color: var(--text);
+      /* Añade esto para evitar que palabras largas rompan el layout */
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+    }
+
+    .recipe-fs-body .recipe-body strong {
+      color: var(--green);
+    }
+
+    /* ── DELETE RECIPE CONFIRM ── */
+    .confirm-body {
+      text-align: center;
+      padding: 8px 0 4px;
+    }
+
+    .confirm-body p {
+      font-size: 15px;
+      color: var(--text);
+      margin-bottom: 18px;
+      line-height: 1.5;
+    }
+
+    .confirm-btns {
+      display: flex;
+      gap: 10px;
+    }
+
+    .confirm-btns .btn-full {
+      flex: 1;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ────────── HEADER ────────── -->
+  <header class="header">
+    <div>
+      <div class="header-logo">🥗 Dieta PETRA</div>
+      <div class="header-sub">Plan nutricional personalizado</div>
+    </div>
+    <button class="icon-btn" onclick="openSettings()" title="Configuración">⚙️</button>
+  </header>
+
+  <!-- ────────── MEAL TABS ────────── -->
+  <div class="tabs" id="tabs"></div>
+
+  <!-- ────────── SCROLL CONTENT ────────── -->
+  <div class="scroll" id="content"></div>
+
+  <!-- ────────── BOTTOM BAR ────────── -->
+  <div class="bottom">
+    <button class="btn btn-green" id="btnRand" onclick="handleRandomize()">🎲 Randomizar</button>
+    <button class="btn btn-terra" id="btnRecipe" onclick="generateRecipe()" disabled>✨ Receta</button>
+  </div>
+
+  <!-- ────────── FULLSCREEN RECIPE VIEW ────────── -->
+  <div class="recipe-fullscreen hidden" id="recipeFullscreen">
+    <div class="recipe-fs-header">
+      <button class="recipe-fs-back" onclick="closeRecipeFS()">←</button>
+      <div class="recipe-fs-title" id="recipeFsTitle">Receta</div>
+    </div>
+    <div class="recipe-fs-body" id="recipeFsBody"></div>
+  </div>
+
+  <!-- ────────── DELETE RECIPE CONFIRM ────────── -->
+  <div class="overlay hidden" id="deleteRecipeOverlay" onclick="handleOverlayClick(event,'deleteRecipeOverlay')">
+    <div class="sheet">
+      <div class="sheet-handle"></div>
+      <div class="sheet-title">🗑 Borrar receta</div>
+      <div class="confirm-body">
+        <p>¿Quieres borrar la receta guardada?<br>Podrás generar una nueva con los mismos ingredientes.</p>
+        <div class="confirm-btns">
+          <button class="btn-full ghost" onclick="closeOverlay('deleteRecipeOverlay')">No</button>
+          <button class="btn-full green" onclick="confirmDeleteRecipe()">Sí, borrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ────────── RESET MEAL CONFIRM ────────── -->
+  <div class="overlay hidden" id="resetMealOverlay" onclick="handleOverlayClick(event,'resetMealOverlay')">
+    <div class="sheet">
+      <div class="sheet-handle"></div>
+      <div class="sheet-title">🗑 Reiniciar comida</div>
+      <div class="confirm-body">
+        <p id="resetMealText">¿Estás seguro que quieres reiniciar todo el menú de esta comida?<br>Se borrarán los
+          alimentos y la receta de esta sección.</p>
+        <div class="confirm-btns">
+          <button class="btn-full ghost" onclick="closeOverlay('resetMealOverlay')">No, cancelar</button>
+          <button class="btn-full green" style="background:#E8704A" onclick="confirmResetMeal()">Sí, reiniciar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ────────── SETTINGS MODAL ────────── -->
+  <div class="overlay hidden" id="settingsOverlay" onclick="handleOverlayClick(event,'settingsOverlay')">
+    <div class="sheet">
+      <div class="sheet-handle"></div>
+      <div class="sheet-title">⚙️ Configuración</div>
+      <p style="color:var(--muted);font-size:14px;margin:10px 0 18px;line-height:1.55">
+        Ingresa tu API Key de Gemini para generar recetas. Se guarda solo en este dispositivo, nunca se sube a ningún
+        servidor.
+      </p>
+      <label class="form-label" for="keyInput">API Key de Gemini</label>
+      <input class="input" type="password" id="keyInput" placeholder="AIzaSy..." autocomplete="off" spellcheck="false">
+      <p class="input-hint">
+        🔒 Se guarda en el navegador (localStorage). Restringe tu key al dominio de esta app en
+        <strong>console.cloud.google.com</strong> para mayor seguridad.
+      </p>
+      <button class="btn-full green" onclick="saveKey()">Guardar</button>
+      <button class="btn-full ghost" onclick="closeOverlay('settingsOverlay')">Cancelar</button>
+    </div>
+  </div>
+
+  <!-- ────────── SWAP MODAL ────────── -->
+  <div class="overlay hidden" id="swapOverlay" onclick="handleOverlayClick(event,'swapOverlay')">
+    <div class="sheet">
+      <div class="sheet-handle"></div>
+      <div class="sheet-title" id="swapTitle">🔄 Cambiar alimento</div>
+      <div class="sheet-sub" id="swapSub">Selecciona un reemplazo</div>
+      <div id="swapBody"></div>
+      <button class="btn-full ghost" style="margin-top:12px" onclick="closeOverlay('swapOverlay')">Cancelar</button>
+    </div>
+  </div>
+
+  <script>
+    // ═══════════════════════════════════════════════════════════
+    //  DATA
+    // ═══════════════════════════════════════════════════════════
+
+    const GRUPOS = {
+      frutas: {
+        label: 'Frutas', color: '#E8704A',
+        alimentos: [
+          { id: 'fr01', nombre: 'Arándano fresco', porcion: '1½ taza' },
+          { id: 'fr02', nombre: 'Blueberries', porcion: '¾ taza' },
+          { id: 'fr03', nombre: 'Cereza', porcion: '20 piezas' },
+          { id: 'fr04', nombre: 'Chicozapote', porcion: '½ pieza' },
+          { id: 'fr05', nombre: 'Ciruela pasa s/hueso', porcion: '7 piezas' },
+          { id: 'fr06', nombre: 'Durazno amarillo', porcion: '2 piezas' },
+          { id: 'fr07', nombre: 'Fresa rebanada', porcion: '1 taza' },
+          { id: 'fr08', nombre: 'Guayaba', porcion: '3 piezas' },
+          { id: 'fr09', nombre: 'Kiwi', porcion: '1½ pieza' },
+          { id: 'fr10', nombre: 'Mamey', porcion: '⅓ pieza' },
+          { id: 'fr11', nombre: 'Mandarina', porcion: '2 piezas' },
+          { id: 'fr12', nombre: 'Mango manila', porcion: '1 pieza' },
+          { id: 'fr13', nombre: 'Mango petacón', porcion: '½ pieza' },
+          { id: 'fr14', nombre: 'Manzana', porcion: '1 pieza' },
+          { id: 'fr15', nombre: 'Melón picado', porcion: '1 taza' },
+          { id: 'fr16', nombre: 'Moras', porcion: '¾ taza' },
+          { id: 'fr17', nombre: 'Naranja', porcion: '2 piezas' },
+          { id: 'fr18', nombre: 'Papaya picada', porcion: '1 taza' },
+          { id: 'fr19', nombre: 'Pasas', porcion: '10 piezas' },
+          { id: 'fr20', nombre: 'Pera', porcion: '½ pieza' },
+          { id: 'fr21', nombre: 'Piña picada', porcion: '¾ taza' },
+          { id: 'fr22', nombre: 'Plátano', porcion: '½ pieza' },
+          { id: 'fr23', nombre: 'Plátano dominicano', porcion: '3 piezas' },
+          { id: 'fr24', nombre: 'Sandía picada', porcion: '1 taza' },
+          { id: 'fr25', nombre: 'Toronja', porcion: '1 pieza' },
+          { id: 'fr26', nombre: 'Uva', porcion: '18 piezas' }
+        ]
+      },
+      verduras: {
+        label: 'Verduras', color: '#52B788',
+        alimentos: [
+          { id: 'vd01', nombre: 'Acelga picada', porcion: '½ taza' },
+          { id: 'vd02', nombre: 'Apio picado', porcion: '¾ taza' },
+          { id: 'vd03', nombre: 'Berenjena cruda', porcion: '1 taza' },
+          { id: 'vd04', nombre: 'Betabel crudo', porcion: '¼ pieza' },
+          { id: 'vd05', nombre: 'Brócoli cocido', porcion: '½ taza' },
+          { id: 'vd06', nombre: 'Calabacita alargada', porcion: '1 pieza' },
+          { id: 'vd07', nombre: 'Champiñón rebanado', porcion: '½ taza' },
+          { id: 'vd08', nombre: 'Chayote cocido', porcion: '½ taza' },
+          { id: 'vd09', nombre: 'Chícharo cocido', porcion: '⅓ taza' },
+          { id: 'vd10', nombre: 'Chile poblano', porcion: '½ pieza' },
+          { id: 'vd11', nombre: 'Coliflor cocida', porcion: '1 taza' },
+          { id: 'vd12', nombre: 'Ejotes cocidos', porcion: '½ taza' },
+          { id: 'vd13', nombre: 'Espinaca cocida', porcion: '½ taza' },
+          { id: 'vd14', nombre: 'Espinaca cruda', porcion: '2 tazas' },
+          { id: 'vd15', nombre: 'Flor de calabaza cocida', porcion: '1 taza' },
+          { id: 'vd16', nombre: 'Jícama picada', porcion: '½ taza' },
+          { id: 'vd17', nombre: 'Jitomate bola', porcion: '1 pieza' },
+          { id: 'vd18', nombre: 'Lechuga', porcion: '3 tazas' },
+          { id: 'vd19', nombre: 'Nopal cocido', porcion: '1 taza' },
+          { id: 'vd20', nombre: 'Pepino rebanado', porcion: '1 taza' },
+          { id: 'vd21', nombre: 'Pimiento cocido', porcion: '½ taza' },
+          { id: 'vd22', nombre: 'Poro crudo', porcion: '¼ taza' },
+          { id: 'vd23', nombre: 'Tomate verde', porcion: '5 piezas' },
+          { id: 'vd24', nombre: 'Verdolaga cocida', porcion: '1 taza' },
+          { id: 'vd25', nombre: 'Zanahoria picada', porcion: '½ taza' },
+          { id: 'vd26', nombre: 'Zanahoria rallada', porcion: '½ taza' }
+        ]
+      },
+      cereales: {
+        label: 'Cereales', color: '#D4951A',
+        alimentos: [
+          { id: 'ce01', nombre: 'Alegría natural', porcion: '5 cucharaditas' },
+          { id: 'ce02', nombre: 'Amaranto tostado', porcion: '¼ taza' },
+          { id: 'ce03', nombre: 'Arroz cocido', porcion: '¼ taza' },
+          { id: 'ce04', nombre: 'Arroz integral cocido', porcion: '⅓ taza' },
+          { id: 'ce05', nombre: 'Atole en sobre', porcion: '⅓ sobre' },
+          { id: 'ce06', nombre: 'Avena cocida', porcion: '¾ taza' },
+          { id: 'ce07', nombre: 'Avena en hojuelas', porcion: '½ taza' },
+          { id: 'ce08', nombre: 'Bolillo', porcion: '⅓ pieza' },
+          { id: 'ce09', nombre: 'Camote cocido', porcion: '⅓ taza' },
+          { id: 'ce10', nombre: 'Cereal sin azúcar', porcion: '½ taza' },
+          { id: 'ce11', nombre: 'Elote desgranado cocido', porcion: '½ taza' },
+          { id: 'ce12', nombre: 'Espagueti cocido', porcion: '⅓ taza' },
+          { id: 'ce13', nombre: 'Galletas marías', porcion: '5 piezas' },
+          { id: 'ce14', nombre: 'Palomitas naturales', porcion: '2½ tazas' },
+          { id: 'ce15', nombre: 'Pan de hamburguesa chico', porcion: '½ pieza' },
+          { id: 'ce16', nombre: 'Pan integral', porcion: '1 rebanada' },
+          { id: 'ce17', nombre: 'Pan tostado', porcion: '1 rebanada' },
+          { id: 'ce18', nombre: 'Papa cocida', porcion: '½ pieza' },
+          { id: 'ce19', nombre: 'Pasta cocida', porcion: '½ taza' },
+          { id: 'ce20', nombre: 'Puré de papa', porcion: '⅓ taza' },
+          { id: 'ce21', nombre: 'Tortilla de maíz', porcion: '1 pieza' },
+          { id: 'ce22', nombre: 'Tostada de maíz horneada', porcion: '2 piezas' }
+        ]
+      },
+      leguminosas: {
+        label: 'Leguminosas', color: '#9C7A52',
+        alimentos: [
+          { id: 'le01', nombre: 'Alubia cocida', porcion: '½ taza' },
+          { id: 'le02', nombre: 'Frijol cocido', porcion: '½ taza' },
+          { id: 'le03', nombre: 'Garbanzo cocido', porcion: '½ taza' },
+          { id: 'le04', nombre: 'Haba de lima cocida', porcion: '½ taza' },
+          { id: 'le05', nombre: 'Haba seca cocida', porcion: '⅓ taza' },
+          { id: 'le06', nombre: 'Harina de lenteja', porcion: '3 cucharadas' },
+          { id: 'le07', nombre: 'Harina de soya', porcion: '4 cucharadas' },
+          { id: 'le08', nombre: 'Hummus', porcion: '5 cucharadas' },
+          { id: 'le09', nombre: 'Lenteja cocida', porcion: '½ taza' },
+          { id: 'le10', nombre: 'Soya cocida', porcion: '⅓ taza' }
+        ]
+      },
+      aoa_mbag: {
+        label: 'Proteína · muy bajo en grasa', color: '#E07070',
+        alimentos: [
+          { id: 'mb01', nombre: 'Atún en lata', porcion: '1 lata' },
+          { id: 'mb02', nombre: 'Bistec de res', porcion: '30 g' },
+          { id: 'mb03', nombre: 'Carne molida de pollo', porcion: '30 g' },
+          { id: 'mb04', nombre: 'Carne molida de pavo', porcion: '30 g' },
+          { id: 'mb05', nombre: 'Cecina', porcion: '25 g' },
+          { id: 'mb06', nombre: 'Clara de huevo', porcion: '¼ taza' },
+          { id: 'mb07', nombre: 'Falda de res', porcion: '35 g' },
+          { id: 'mb08', nombre: 'Filete de pescado', porcion: '40 g' },
+          { id: 'mb09', nombre: 'Filete de res', porcion: '30 g' },
+          { id: 'mb10', nombre: 'Maciza de res', porcion: '25 g' },
+          { id: 'mb11', nombre: 'Machaca de res', porcion: '15 g' },
+          { id: 'mb12', nombre: 'Pechuga de pavo s/piel', porcion: '30 g' },
+          { id: 'mb13', nombre: 'Pechuga de pollo s/piel', porcion: '30 g' },
+          { id: 'mb14', nombre: 'Pollo desmenuzado', porcion: '30 g' },
+          { id: 'mb15', nombre: 'Punta de res', porcion: '30 g' },
+          { id: 'mb16', nombre: 'Tampiqueña', porcion: '¼ pieza' }
+        ]
+      },
+      aoa_bag: {
+        label: 'Proteína · bajo en grasa', color: '#C9697A',
+        alimentos: [
+          { id: 'ba01', nombre: 'Arrachera de res', porcion: '30 g' },
+          { id: 'ba02', nombre: 'Carne molida de res', porcion: '40 g' },
+          { id: 'ba03', nombre: 'Falda de cerdo', porcion: '40 g' },
+          { id: 'ba04', nombre: 'Filete de res', porcion: '40 g' },
+          { id: 'ba05', nombre: 'Jamón de pavo', porcion: '2 rebanadas' },
+          { id: 'ba06', nombre: 'Milanesa de cerdo', porcion: '30 g' },
+          { id: 'ba07', nombre: 'Milanesa de ternera', porcion: '35 g' },
+          { id: 'ba08', nombre: 'Muslo de pollo', porcion: '½ pieza' },
+          { id: 'ba09', nombre: 'Pavo', porcion: '45 g' },
+          { id: 'ba10', nombre: 'Pierna de cerdo', porcion: '40 g' },
+          { id: 'ba11', nombre: 'Pierna de pollo s/piel', porcion: '⅓ pieza' },
+          { id: 'ba12', nombre: 'Queso fresco', porcion: '40 g' },
+          { id: 'ba13', nombre: 'Queso oaxaca', porcion: '30 g' },
+          { id: 'ba14', nombre: 'Queso panela', porcion: '40 g' },
+          { id: 'ba15', nombre: 'Ternera', porcion: '35 g' },
+          { id: 'ba16', nombre: 'Trucha', porcion: '70 g' }
+        ]
+      },
+      aoa_mag: {
+        label: 'Proteína · moderado en grasa', color: '#9B72CF',
+        alimentos: [
+          { id: 'ma01', nombre: 'Bistec de bola', porcion: '25 g' },
+          { id: 'ma02', nombre: 'Carne de suadero', porcion: '30 g' },
+          { id: 'ma03', nombre: 'Carne deshebrada', porcion: '30 g' },
+          { id: 'ma04', nombre: 'Costillitas de cerdo', porcion: '50 g' },
+          { id: 'ma05', nombre: 'Huevo entero', porcion: '1 pieza' },
+          { id: 'ma06', nombre: 'Muslo de pollo c/piel', porcion: '⅓ pieza' },
+          { id: 'ma07', nombre: 'Queso monterrey', porcion: '1 rebanada' },
+          { id: 'ma08', nombre: 'Sardinas en aceite', porcion: '1 lata' },
+          { id: 'ma09', nombre: 'Sierra fileteada', porcion: '35 g' },
+          { id: 'ma10', nombre: 'Sierra picada', porcion: '35 g' }
+        ]
+      },
+      grasas: {
+        label: 'Grasas sin proteína', color: '#C8A020',
+        alimentos: [
+          { id: 'gs01', nombre: 'Aceite de canola', porcion: '1 cda cafetera' },
+          { id: 'gs02', nombre: 'Aceite de cártamo', porcion: '1 cda cafetera' },
+          { id: 'gs03', nombre: 'Aceite de oliva', porcion: '1 cda cafetera' },
+          { id: 'gs04', nombre: 'Aceite de spray', porcion: '5 disparos' },
+          { id: 'gs05', nombre: 'Aguacate Hass', porcion: '⅓ pieza' },
+          { id: 'gs06', nombre: 'Mantequilla', porcion: '½ cda cafetera' }
+        ]
+      },
+      lacteos: {
+        label: 'Lácteos semidescremados', color: '#5B9EC9',
+        alimentos: [
+          { id: 'lc01', nombre: 'Leche semidescremada', porcion: '240 ml' },
+          { id: 'lc02', nombre: 'Yogur natural semidescremado', porcion: '¾ taza' }
+        ]
+      }
+    };
+
+    const MEALS = [
+      {
+        id: 'desayuno', label: 'Desayuno', emoji: '🌅',
+        slots: [
+          { grupo: 'verduras', n: 1 },
+          { grupo: 'cereales', n: 3 },
+          { grupo: 'leguminosas', n: 1 },
+          { grupo: 'aoa_mbag', n: 1 },
+          { grupo: 'aoa_mag', n: 1 },
+          { grupo: 'grasas', n: 2 }
+        ]
+      },
+      {
+        id: 'colacion1', label: 'Colación 1', emoji: '🍎',
+        slots: [{ grupo: 'frutas', n: 1 }]
+      },
+      {
+        id: 'comida', label: 'Comida', emoji: '🍽️',
+        slots: [
+          { grupo: 'verduras', n: 2 },
+          { grupo: 'cereales', n: 3 },
+          { grupo: 'leguminosas', n: 1 },
+          { grupo: 'aoa_bag', n: 2 },
+          { grupo: 'grasas', n: 2 }
+        ]
+      },
+      {
+        id: 'colacion2', label: 'Colación 2', emoji: '🥝',
+        slots: [{ grupo: 'frutas', n: 1 }]
+      },
+      {
+        id: 'cena', label: 'Cena', emoji: '🌙',
+        slots: [
+          { grupo: 'verduras', n: 1 },
+          { grupo: 'aoa_mbag', n: 1 },
+          { grupo: 'cereales', n: 2 },
+          { grupo: 'grasas', n: 2 }
+        ]
+      }
+    ];
+
+    // ═══════════════════════════════════════════════════════════
+    //  STATE
+    // ═══════════════════════════════════════════════════════════
+
+    const _saved = JSON.parse(localStorage.getItem('petra_data') || 'null');
+
+    const S = {
+      meal: 'desayuno',
+      selections: _saved?.selections || {},   // { mealId: { grupoId: [item, ...] } }
+      recipes: _saved?.recipes || {},   // { mealId: { title, html } }
+      picked: new Set(),
+      apiKey: localStorage.getItem('petra_key') || '',
+    };
+
+    function saveState() {
+      localStorage.setItem('petra_data', JSON.stringify({
+        selections: S.selections,
+        recipes: S.recipes
+      }));
+    }
+
+    // ═══════════════════════════════════════════════════════════
+    //  UTILS
+    // ═══════════════════════════════════════════════════════════
+
+    const meal = id => MEALS.find(m => m.id === id);
+    const grupo = key => GRUPOS[key];
+
+    function escapeHtml(str) {
+      return str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    function pick(arr, n) {
+      const shuffled = [...arr];
+      for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+      }
+      return shuffled.slice(0, Math.min(n, shuffled.length));
+    }
+
+    // ═══════════════════════════════════════════════════════════
+    //  RENDER
+    // ═══════════════════════════════════════════════════════════
+
+    function renderTabs() {
+      document.getElementById('tabs').innerHTML = MEALS.map(m => `
+    <button class="tab ${m.id === S.meal ? 'active' : ''}" onclick="setMeal('${m.id}')">
+      ${m.emoji} ${m.label}
+    </button>
+  `).join('');
+    }
+
+    function renderContent() {
+      const sel = S.selections[S.meal];
+      const m = meal(S.meal);
+      const el = document.getElementById('content');
+
+      if (!sel) {
+        el.innerHTML = `
+      <div class="empty">
+        <div class="empty-icon">${m.emoji}</div>
+        <h2>${m.label}</h2>
+        <p>Toca <strong>Randomizar</strong> para ver qué comer hoy.</p>
+      </div>`;
+        document.getElementById('btnRecipe').disabled = true;
+        renderRandBtn();
+        return;
+      }
+
+      const hintText = S.picked.size > 0
+        ? `✅ ${S.picked.size} seleccionado${S.picked.size > 1 ? 's' : ''} — toca "Re-randomizar" para cambiarlos`
+        : `Toca para marcar · mantén presionado para elegir otro`;
+
+      let html = `<p class="hint">${hintText}</p>`;
+
+      // ── Action bar: Todos + Reinicio ──
+      html += `
+    <div class="action-bar">
+      <button class="action-btn" onclick="selectAll()">☑ Todos</button>
+      <button class="action-btn danger" onclick="openOverlay('resetMealOverlay')">🗑 Reinicio</button>
+    </div>`;
+
+      m.slots.forEach(slot => {
+        const g = grupo(slot.grupo);
+        const items = sel[slot.grupo] || [];
+        if (!g || !items.length) return;
+
+        html += `
+      <div class="food-card">
+        <div class="card-header">
+          <div class="card-dot" style="background:${g.color}"></div>
+          <span class="card-label">${g.label}</span>
+        </div>
+        <div class="chips">
+          ${items.map((item, idx) => `
+            <div class="chip ${S.picked.has(item.id) ? 'selected' : ''}"
+                 data-grupo="${slot.grupo}" data-idx="${idx}"
+                 onclick="togglePick('${item.id}')">
+              <span class="chip-name">${item.nombre}</span>
+              <span class="chip-portion">${item.porcion}</span>
+            </div>
+          `).join('')}
+        </div>
+      </div>`;
+      });
+
+      // ── Recipe card (inline) ──
+      const recipe = S.recipes[S.meal];
+      if (recipe) {
+        html += `
+      <div class="recipe-card" data-recipe-meal="${S.meal}"
+           onclick="openRecipeFS('${S.meal}')">
+        <span class="recipe-card-icon">📖</span>
+        <div class="recipe-card-text">
+          <div class="recipe-card-label">Receta guardada</div>
+          <div class="recipe-card-title">${escapeHtml(recipe.title)}</div>
+        </div>
+        <span class="recipe-card-arrow">›</span>
+      </div>`;
+      }
+
+      el.innerHTML = html;
+      document.getElementById('btnRecipe').disabled = false;
+      renderRandBtn();
+    }
+
+    function renderRandBtn() {
+      const btn = document.getElementById('btnRand');
+      if (S.picked.size > 0) {
+        btn.textContent = `↺ Re-randomizar (${S.picked.size})`;
+        btn.className = 'btn btn-outline';
+      } else {
+        btn.innerHTML = '🎲 Randomizar';
+        btn.className = 'btn btn-green';
+      }
+    }
+
+    // ═══════════════════════════════════════════════════════════
+    //  ACTIONS
+    // ═══════════════════════════════════════════════════════════
+
+    function setMeal(id) {
+      S.meal = id;
+      S.picked.clear();
+      renderTabs();
+      renderContent();
+    }
+
+    function handleRandomize() {
+      const m = meal(S.meal);
+      const sel = S.selections[S.meal];
+
+      if (!sel || S.picked.size === 0) {
+        // Full randomize — also clear saved recipe
+        const result = {};
+        m.slots.forEach(slot => {
+          result[slot.grupo] = pick(grupo(slot.grupo).alimentos, slot.n);
+        });
+        S.selections[S.meal] = result;
+        delete S.recipes[S.meal];
+      } else {
+        // Selective re-roll
+        m.slots.forEach(slot => {
+          const g = grupo(slot.grupo);
+          const current = sel[slot.grupo] || [];
+          const toSwap = current.filter(i => S.picked.has(i.id));
+          if (!toSwap.length) return;
+
+          const keepIds = current.filter(i => !S.picked.has(i.id)).map(i => i.id);
+          const pool = g.alimentos.filter(a => !keepIds.includes(a.id));
+          const fresh = pick(pool, toSwap.length);
+
+          sel[slot.grupo] = current.map(i =>
+            S.picked.has(i.id) ? (fresh.shift() || i) : i
+          );
+        });
+        // Selective re-roll also invalidates recipe
+        delete S.recipes[S.meal];
+      }
+
+      S.picked.clear();
+      saveState();
+      renderContent();
+    }
+
+    function togglePick(id) {
+      S.picked.has(id) ? S.picked.delete(id) : S.picked.add(id);
+      renderContent();
+    }
+
+    function selectAll() {
+      const sel = S.selections[S.meal];
+      const m = meal(S.meal);
+      if (!sel) return;
+      m.slots.forEach(slot => {
+        (sel[slot.grupo] || []).forEach(item => S.picked.add(item.id));
+      });
+      renderContent();
+    }
+
+    function confirmResetMeal() {
+      delete S.selections[S.meal];
+      delete S.recipes[S.meal];
+      S.picked.clear();
+      saveState();
+      closeOverlay('resetMealOverlay');
+      renderContent();
+    }
+
+    // ═══════════════════════════════════════════════════════════
+    //  SWAP MENU  (long-press mobile · right-click desktop)
+    // ═══════════════════════════════════════════════════════════
+
+    let _lpTimer = null;
+    let _lpFired = false;
+
+    function openSwapMenu(grupoKey, itemIndex) {
+      const g = grupo(grupoKey);
+      const sel = S.selections[S.meal];
+      if (!g || !sel) return;
+
+      const currentItems = sel[grupoKey] || [];
+      const currentItem = currentItems[itemIndex];
+      if (!currentItem) return;
+
+      document.getElementById('swapTitle').textContent = `🔄 ${g.label}`;
+      document.getElementById('swapSub').textContent = `Reemplazar: ${currentItem.nombre}`;
+
+      document.getElementById('swapBody').innerHTML = `<div class="swap-list">
+    ${g.alimentos.map(a => `
+      <div class="swap-option ${a.id === currentItem.id ? 'current' : ''}"
+           onclick="swapItem('${grupoKey}', ${itemIndex}, '${a.id}')">
+        <span class="swap-option-name">${a.nombre}</span>
+        <span class="swap-option-portion">${a.porcion}</span>
+      </div>
+    `).join('')}
+  </div>`;
+
+      openOverlay('swapOverlay');
+    }
+
+    function swapItem(grupoKey, itemIndex, newId) {
+      const item = grupo(grupoKey).alimentos.find(a => a.id === newId);
+      if (!item) return;
+      S.selections[S.meal][grupoKey][itemIndex] = item;
+      delete S.recipes[S.meal]; // invalidate recipe after swap
+      saveState();
+      closeOverlay('swapOverlay');
+      renderContent();
+    }
+
+    // ── Delegated touch / context-menu on #content ──
+
+    function _chipData(e) {
+      const c = e.target.closest('.chip[data-grupo]');
+      return c ? { grupo: c.dataset.grupo, idx: +c.dataset.idx } : null;
+    }
+
+    const _ct = document.getElementById('content');
+
+    _ct.addEventListener('contextmenu', e => {
+      const d = _chipData(e);
+      if (d) {
+        e.preventDefault();
+        openSwapMenu(d.grupo, d.idx);
+        return;
+      }
+      // Check for recipe card right-click
+      const rc = e.target.closest('.recipe-card[data-recipe-meal]');
+      if (rc) {
+        e.preventDefault();
+        openOverlay('deleteRecipeOverlay');
+      }
+    });
+
+    _ct.addEventListener('touchstart', e => {
+      const d = _chipData(e);
+      if (d) {
+        _lpFired = false;
+        _lpTimer = setTimeout(() => { _lpFired = true; openSwapMenu(d.grupo, d.idx); }, 500);
+        return;
+      }
+      // Check for recipe card long-press
+      const rc = e.target.closest('.recipe-card[data-recipe-meal]');
+      if (rc) {
+        _lpFired = false;
+        _lpTimer = setTimeout(() => { _lpFired = true; openOverlay('deleteRecipeOverlay'); }, 500);
+      }
+    }, { passive: true });
+
+    _ct.addEventListener('touchend', e => {
+      clearTimeout(_lpTimer);
+      if (_lpFired) { e.preventDefault(); _lpFired = false; }
+    }, { passive: false });
+
+    _ct.addEventListener('touchmove', () => {
+      clearTimeout(_lpTimer);
+    }, { passive: true });
+
+    _ct.addEventListener('touchcancel', () => {
+      clearTimeout(_lpTimer);
+      _lpFired = false;
+    }, { passive: true });
+
+    // ═══════════════════════════════════════════════════════════
+    //  GEMINI
+    // ═══════════════════════════════════════════════════════════
+
+    async function generateRecipe() {
+      if (!S.apiKey) { openSettings(); return; }
+
+      const m = meal(S.meal);
+      const sel = S.selections[S.meal];
+      if (!sel) return;
+
+      // If recipe already exists, just open it
+      if (S.recipes[S.meal]) {
+        openRecipeFS(S.meal);
+        return;
+      }
+
+      const lines = [];
+      m.slots.forEach(slot => {
+        (sel[slot.grupo] || []).forEach(item => {
+          lines.push(`• ${item.nombre} (${item.porcion})`);
+        });
+      });
+
+      const prompt = `Eres un asistente de nutrición amigable que ayuda a personas mayores a llevar una dieta saludable. Evita saludos iniciales y ve directo a los ingredientes y preparación.
+
+El usuario tiene estos ingredientes para su ${m.label}:
+${lines.join('\n')}
+
+Genera una receta práctica, deliciosa y fácil de preparar que use estos ingredientes respetando las porciones indicadas.
+
+Estructura tu respuesta exactamente así:
+🍳 [Nombre de la receta]
+
+📋 Ingredientes
+[lista con porciones exactas]
+
+👨‍🍳 Preparación
+[pasos numerados, simples y claros, para personas mayores]
+
+💡 Tip
+[un consejo breve]
+
+Responde en español. Máximo 300 palabras.`;
+
+      // Show inline loading state
+      const el = document.getElementById('content');
+      // Remove any existing recipe card and append loading
+      const existingCard = el.querySelector('.recipe-card, .recipe-generating');
+      if (existingCard) existingCard.remove();
+      const loadEl = document.createElement('div');
+      loadEl.className = 'recipe-card recipe-generating';
+      loadEl.innerHTML = '<div class="spin" style="border-top-color:#7A6F62"></div> <span style="margin-left:8px">Generando receta…</span>';
+      el.appendChild(loadEl);
+
+      try {
+        const res = await fetch(
+          `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${S.apiKey}`,
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              contents: [{ parts: [{ text: prompt }] }],
+              generationConfig: { temperature: 0.8, maxOutputTokens: 1500 }
+            })
+          }
+        );
+
+        const data = await res.json();
+        if (data.error) throw new Error(data.error.message);
+
+        const text = data.candidates?.[0]?.content?.parts?.[0]?.text || 'No se pudo generar la receta.';
+
+        // Escape HTML FIRST, then apply formatting
+        const safe = escapeHtml(text);
+        const formatted = safe
+          .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+          .replace(/\n/g, '<br>');
+
+        // Extract title (first line after 🍳)
+        const titleMatch = text.match(/🍳\s*(.+)/);
+        const title = titleMatch ? titleMatch[1].replace(/\*\*/g, '').trim() : `Receta de ${m.label}`;
+
+        S.recipes[S.meal] = { title, html: formatted };
+        saveState();
+        renderContent();
+
+      } catch (err) {
+        if (loadEl.parentNode) loadEl.remove();
+        const errEl = document.createElement('div');
+        errEl.style.cssText = 'background:#FFF0F0;border-radius:10px;padding:14px;color:#B00;font-size:14px;line-height:1.55;margin-top:10px';
+        errEl.innerHTML = `⚠️ ${err.message}<br><br>Verifica tu API Key en ⚙️ Configuración.`;
+        el.appendChild(errEl);
+        setTimeout(() => { if (errEl.parentNode) errEl.remove(); }, 6000);
+      }
+    }
+
+    // ── Fullscreen recipe view ──
+
+    function openRecipeFS(mealId) {
+      const recipe = S.recipes[mealId];
+      if (!recipe) return;
+      document.getElementById('recipeFsTitle').textContent = recipe.title;
+      document.getElementById('recipeFsBody').innerHTML = `<div class="recipe-body">${recipe.html}</div>`;
+      document.getElementById('recipeFullscreen').classList.remove('hidden');
+    }
+
+    function closeRecipeFS() {
+      document.getElementById('recipeFullscreen').classList.add('hidden');
+    }
+
+    function confirmDeleteRecipe() {
+      delete S.recipes[S.meal];
+      saveState();
+      closeOverlay('deleteRecipeOverlay');
+      renderContent();
+    }
+
+    // ═══════════════════════════════════════════════════════════
+    //  MODALS
+    // ═══════════════════════════════════════════════════════════
+
+    function openOverlay(id) { document.getElementById(id).classList.remove('hidden'); }
+    function closeOverlay(id) { document.getElementById(id).classList.add('hidden'); }
+
+    function handleOverlayClick(e, id) {
+      if (e.target === document.getElementById(id)) closeOverlay(id);
+    }
+
+    function openSettings() {
+      document.getElementById('keyInput').value = S.apiKey;
+      openOverlay('settingsOverlay');
+    }
+
+    function saveKey() {
+      const key = document.getElementById('keyInput').value.trim();
+      S.apiKey = key;
+      if (key) localStorage.setItem('petra_key', key);
+      else localStorage.removeItem('petra_key');
+      closeOverlay('settingsOverlay');
+    }
+
+    // ═══════════════════════════════════════════════════════════
+    //  INIT
+    // ═══════════════════════════════════════════════════════════
+
+    renderTabs();
+    renderContent();
+
+    if (!S.apiKey) {
+      setTimeout(() => openSettings(), 600);
+    }
+
+    // If previously saved data existed, remove lacteos selections (migration)
+    if (_saved?.selections) {
+      Object.values(S.selections).forEach(sel => { delete sel.lacteos; });
+      saveState();
+    }
+  </script>
+</body>
+
+</html>
