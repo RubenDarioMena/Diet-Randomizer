@@ -609,6 +609,21 @@
   </div>
 </div>
 
+<!-- ────────── RESET MEAL CONFIRM ────────── -->
+<div class="overlay hidden" id="resetMealOverlay" onclick="handleOverlayClick(event,'resetMealOverlay')">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-title">🗑 Reiniciar comida</div>
+    <div class="confirm-body">
+      <p id="resetMealText">¿Estás seguro que quieres reiniciar todo el menú de esta comida?<br>Se borrarán los alimentos y la receta de esta sección.</p>
+      <div class="confirm-btns">
+        <button class="btn-full ghost" onclick="closeOverlay('resetMealOverlay')">No, cancelar</button>
+        <button class="btn-full green" style="background:#E8704A" onclick="confirmResetMeal()">Sí, reiniciar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- ────────── SETTINGS MODAL ────────── -->
 <div class="overlay hidden" id="settingsOverlay" onclick="handleOverlayClick(event,'settingsOverlay')">
   <div class="sheet">
@@ -946,7 +961,7 @@ function renderContent() {
   html += `
     <div class="action-bar">
       <button class="action-btn" onclick="selectAll()">☑ Todos</button>
-      <button class="action-btn danger" onclick="resetApp()">🗑 Reinicio</button>
+      <button class="action-btn danger" onclick="openOverlay('resetMealOverlay')">🗑 Reinicio</button>
     </div>`;
 
   m.slots.forEach(slot => {
@@ -1067,13 +1082,12 @@ function selectAll() {
   renderContent();
 }
 
-function resetApp() {
-  S.selections = {};
-  S.recipes    = {};
+function confirmResetMeal() {
+  delete S.selections[S.meal];
+  delete S.recipes[S.meal];
   S.picked.clear();
-  S.meal = 'desayuno';
   saveState();
-  renderTabs();
+  closeOverlay('resetMealOverlay');
   renderContent();
 }
 
