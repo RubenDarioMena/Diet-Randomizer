@@ -861,231 +861,13 @@
 
   <script>
     // ═══════════════════════════════════════════════════════════
-    //  DATA
+    //  DATA — loaded dynamically from dieta_petra.json
     // ═══════════════════════════════════════════════════════════
 
-    const GRUPOS = {
-      frutas: {
-        label: 'Frutas', color: '#E8704A',
-        alimentos: [
-          { id: 'fr01', nombre: 'Arándano fresco', porcion: '1½ taza' },
-          { id: 'fr02', nombre: 'Blueberries', porcion: '¾ taza' },
-          { id: 'fr03', nombre: 'Cereza', porcion: '20 piezas' },
-          { id: 'fr04', nombre: 'Chicozapote', porcion: '½ pieza' },
-          { id: 'fr05', nombre: 'Ciruela pasa s/hueso', porcion: '7 piezas' },
-          { id: 'fr06', nombre: 'Durazno amarillo', porcion: '2 piezas' },
-          { id: 'fr07', nombre: 'Fresa rebanada', porcion: '1 taza' },
-          { id: 'fr08', nombre: 'Guayaba', porcion: '3 piezas' },
-          { id: 'fr09', nombre: 'Kiwi', porcion: '1½ pieza' },
-          { id: 'fr10', nombre: 'Mamey', porcion: '⅓ pieza' },
-          { id: 'fr11', nombre: 'Mandarina', porcion: '2 piezas' },
-          { id: 'fr12', nombre: 'Mango manila', porcion: '1 pieza' },
-          { id: 'fr13', nombre: 'Mango petacón', porcion: '½ pieza' },
-          { id: 'fr14', nombre: 'Manzana', porcion: '1 pieza' },
-          { id: 'fr15', nombre: 'Melón picado', porcion: '1 taza' },
-          { id: 'fr16', nombre: 'Moras', porcion: '¾ taza' },
-          { id: 'fr17', nombre: 'Naranja', porcion: '2 piezas' },
-          { id: 'fr18', nombre: 'Papaya picada', porcion: '1 taza' },
-          { id: 'fr19', nombre: 'Pasas', porcion: '10 piezas' },
-          { id: 'fr20', nombre: 'Pera', porcion: '½ pieza' },
-          { id: 'fr21', nombre: 'Piña picada', porcion: '¾ taza' },
-          { id: 'fr22', nombre: 'Plátano', porcion: '½ pieza' },
-          { id: 'fr23', nombre: 'Plátano dominicano', porcion: '3 piezas' },
-          { id: 'fr24', nombre: 'Sandía picada', porcion: '1 taza' },
-          { id: 'fr25', nombre: 'Toronja', porcion: '1 pieza' },
-          { id: 'fr26', nombre: 'Uva', porcion: '18 piezas' }
-        ]
-      },
-      verduras: {
-        label: 'Verduras', color: '#52B788',
-        alimentos: [
-          { id: 'vd01', nombre: 'Acelga picada', porcion: '½ taza' },
-          { id: 'vd02', nombre: 'Apio picado', porcion: '¾ taza' },
-          { id: 'vd03', nombre: 'Berenjena cruda', porcion: '1 taza' },
-          { id: 'vd04', nombre: 'Betabel crudo', porcion: '¼ pieza' },
-          { id: 'vd05', nombre: 'Brócoli cocido', porcion: '½ taza' },
-          { id: 'vd06', nombre: 'Calabacita alargada', porcion: '1 pieza' },
-          { id: 'vd07', nombre: 'Champiñón rebanado', porcion: '½ taza' },
-          { id: 'vd08', nombre: 'Chayote cocido', porcion: '½ taza' },
-          { id: 'vd09', nombre: 'Chícharo cocido', porcion: '⅓ taza' },
-          { id: 'vd10', nombre: 'Chile poblano', porcion: '½ pieza' },
-          { id: 'vd11', nombre: 'Coliflor cocida', porcion: '1 taza' },
-          { id: 'vd12', nombre: 'Ejotes cocidos', porcion: '½ taza' },
-          { id: 'vd13', nombre: 'Espinaca cocida', porcion: '½ taza' },
-          { id: 'vd14', nombre: 'Espinaca cruda', porcion: '2 tazas' },
-          { id: 'vd15', nombre: 'Flor de calabaza cocida', porcion: '1 taza' },
-          { id: 'vd16', nombre: 'Jícama picada', porcion: '½ taza' },
-          { id: 'vd17', nombre: 'Jitomate bola', porcion: '1 pieza' },
-          { id: 'vd18', nombre: 'Lechuga', porcion: '3 tazas' },
-          { id: 'vd19', nombre: 'Nopal cocido', porcion: '1 taza' },
-          { id: 'vd20', nombre: 'Pepino rebanado', porcion: '1 taza' },
-          { id: 'vd21', nombre: 'Pimiento cocido', porcion: '½ taza' },
-          { id: 'vd22', nombre: 'Poro crudo', porcion: '¼ taza' },
-          { id: 'vd23', nombre: 'Tomate verde', porcion: '5 piezas' },
-          { id: 'vd24', nombre: 'Verdolaga cocida', porcion: '1 taza' },
-          { id: 'vd25', nombre: 'Zanahoria picada', porcion: '½ taza' },
-          { id: 'vd26', nombre: 'Zanahoria rallada', porcion: '½ taza' }
-        ]
-      },
-      cereales: {
-        label: 'Cereales', color: '#D4951A',
-        alimentos: [
-          { id: 'ce01', nombre: 'Alegría natural', porcion: '5 cucharaditas' },
-          { id: 'ce02', nombre: 'Amaranto tostado', porcion: '¼ taza' },
-          { id: 'ce03', nombre: 'Arroz cocido', porcion: '¼ taza' },
-          { id: 'ce04', nombre: 'Arroz integral cocido', porcion: '⅓ taza' },
-          { id: 'ce05', nombre: 'Atole en sobre', porcion: '⅓ sobre' },
-          { id: 'ce06', nombre: 'Avena cocida', porcion: '¾ taza' },
-          { id: 'ce07', nombre: 'Avena en hojuelas', porcion: '½ taza' },
-          { id: 'ce08', nombre: 'Bolillo', porcion: '⅓ pieza' },
-          { id: 'ce09', nombre: 'Camote cocido', porcion: '⅓ taza' },
-          { id: 'ce10', nombre: 'Cereal sin azúcar', porcion: '½ taza' },
-          { id: 'ce11', nombre: 'Elote desgranado cocido', porcion: '½ taza' },
-          { id: 'ce12', nombre: 'Espagueti cocido', porcion: '⅓ taza' },
-          { id: 'ce13', nombre: 'Galletas marías', porcion: '5 piezas' },
-          { id: 'ce14', nombre: 'Palomitas naturales', porcion: '2½ tazas' },
-          { id: 'ce15', nombre: 'Pan de hamburguesa chico', porcion: '½ pieza' },
-          { id: 'ce16', nombre: 'Pan integral', porcion: '1 rebanada' },
-          { id: 'ce17', nombre: 'Pan tostado', porcion: '1 rebanada' },
-          { id: 'ce18', nombre: 'Papa cocida', porcion: '½ pieza' },
-          { id: 'ce19', nombre: 'Pasta cocida', porcion: '½ taza' },
-          { id: 'ce20', nombre: 'Puré de papa', porcion: '⅓ taza' },
-          { id: 'ce21', nombre: 'Tortilla de maíz', porcion: '1 pieza' },
-          { id: 'ce22', nombre: 'Tostada de maíz horneada', porcion: '2 piezas' }
-        ]
-      },
-      leguminosas: {
-        label: 'Leguminosas', color: '#9C7A52',
-        alimentos: [
-          { id: 'le01', nombre: 'Alubia cocida', porcion: '½ taza' },
-          { id: 'le02', nombre: 'Frijol cocido', porcion: '½ taza' },
-          { id: 'le03', nombre: 'Garbanzo cocido', porcion: '½ taza' },
-          { id: 'le04', nombre: 'Haba de lima cocida', porcion: '½ taza' },
-          { id: 'le05', nombre: 'Haba seca cocida', porcion: '⅓ taza' },
-          { id: 'le06', nombre: 'Harina de lenteja', porcion: '3 cucharadas' },
-          { id: 'le07', nombre: 'Harina de soya', porcion: '4 cucharadas' },
-          { id: 'le08', nombre: 'Hummus', porcion: '5 cucharadas' },
-          { id: 'le09', nombre: 'Lenteja cocida', porcion: '½ taza' },
-          { id: 'le10', nombre: 'Soya cocida', porcion: '⅓ taza' }
-        ]
-      },
-      aoa_mbag: {
-        label: 'Proteína · muy bajo en grasa', color: '#E07070',
-        alimentos: [
-          { id: 'mb01', nombre: 'Atún en lata', porcion: '1 lata' },
-          { id: 'mb02', nombre: 'Bistec de res', porcion: '30 g' },
-          { id: 'mb03', nombre: 'Carne molida de pollo', porcion: '30 g' },
-          { id: 'mb04', nombre: 'Carne molida de pavo', porcion: '30 g' },
-          { id: 'mb05', nombre: 'Cecina', porcion: '25 g' },
-          { id: 'mb06', nombre: 'Clara de huevo', porcion: '¼ taza' },
-          { id: 'mb07', nombre: 'Falda de res', porcion: '35 g' },
-          { id: 'mb08', nombre: 'Filete de pescado', porcion: '40 g' },
-          { id: 'mb09', nombre: 'Filete de res', porcion: '30 g' },
-          { id: 'mb10', nombre: 'Maciza de res', porcion: '25 g' },
-          { id: 'mb11', nombre: 'Machaca de res', porcion: '15 g' },
-          { id: 'mb12', nombre: 'Pechuga de pavo s/piel', porcion: '30 g' },
-          { id: 'mb13', nombre: 'Pechuga de pollo s/piel', porcion: '30 g' },
-          { id: 'mb14', nombre: 'Pollo desmenuzado', porcion: '30 g' },
-          { id: 'mb15', nombre: 'Punta de res', porcion: '30 g' },
-          { id: 'mb16', nombre: 'Tampiqueña', porcion: '¼ pieza' }
-        ]
-      },
-      aoa_bag: {
-        label: 'Proteína · bajo en grasa', color: '#C9697A',
-        alimentos: [
-          { id: 'ba01', nombre: 'Arrachera de res', porcion: '30 g' },
-          { id: 'ba02', nombre: 'Carne molida de res', porcion: '40 g' },
-          { id: 'ba03', nombre: 'Falda de cerdo', porcion: '40 g' },
-          { id: 'ba04', nombre: 'Filete de res', porcion: '40 g' },
-          { id: 'ba05', nombre: 'Jamón de pavo', porcion: '2 rebanadas' },
-          { id: 'ba06', nombre: 'Milanesa de cerdo', porcion: '30 g' },
-          { id: 'ba07', nombre: 'Milanesa de ternera', porcion: '35 g' },
-          { id: 'ba08', nombre: 'Muslo de pollo', porcion: '½ pieza' },
-          { id: 'ba09', nombre: 'Pavo', porcion: '45 g' },
-          { id: 'ba10', nombre: 'Pierna de cerdo', porcion: '40 g' },
-          { id: 'ba11', nombre: 'Pierna de pollo s/piel', porcion: '⅓ pieza' },
-          { id: 'ba12', nombre: 'Queso fresco', porcion: '40 g' },
-          { id: 'ba13', nombre: 'Queso oaxaca', porcion: '30 g' },
-          { id: 'ba14', nombre: 'Queso panela', porcion: '40 g' },
-          { id: 'ba15', nombre: 'Ternera', porcion: '35 g' },
-          { id: 'ba16', nombre: 'Trucha', porcion: '70 g' }
-        ]
-      },
-      aoa_mag: {
-        label: 'Proteína · moderado en grasa', color: '#9B72CF',
-        alimentos: [
-          { id: 'ma01', nombre: 'Bistec de bola', porcion: '25 g' },
-          { id: 'ma02', nombre: 'Carne de suadero', porcion: '30 g' },
-          { id: 'ma03', nombre: 'Carne deshebrada', porcion: '30 g' },
-          { id: 'ma04', nombre: 'Costillitas de cerdo', porcion: '50 g' },
-          { id: 'ma05', nombre: 'Huevo entero', porcion: '1 pieza' },
-          { id: 'ma06', nombre: 'Muslo de pollo c/piel', porcion: '⅓ pieza' },
-          { id: 'ma07', nombre: 'Queso monterrey', porcion: '1 rebanada' },
-          { id: 'ma08', nombre: 'Sardinas en aceite', porcion: '1 lata' },
-          { id: 'ma09', nombre: 'Sierra fileteada', porcion: '35 g' },
-          { id: 'ma10', nombre: 'Sierra picada', porcion: '35 g' }
-        ]
-      },
-      grasas: {
-        label: 'Grasas sin proteína', color: '#C8A020',
-        alimentos: [
-          { id: 'gs01', nombre: 'Aceite de canola', porcion: '1 cda cafetera' },
-          { id: 'gs02', nombre: 'Aceite de cártamo', porcion: '1 cda cafetera' },
-          { id: 'gs03', nombre: 'Aceite de oliva', porcion: '1 cda cafetera' },
-          { id: 'gs04', nombre: 'Aceite de spray', porcion: '5 disparos' },
-          { id: 'gs05', nombre: 'Aguacate Hass', porcion: '⅓ pieza' },
-          { id: 'gs06', nombre: 'Mantequilla', porcion: '½ cda cafetera' }
-        ]
-      },
-      lacteos: {
-        label: 'Lácteos semidescremados', color: '#5B9EC9',
-        alimentos: [
-          { id: 'lc01', nombre: 'Leche semidescremada', porcion: '240 ml' },
-          { id: 'lc02', nombre: 'Yogur natural semidescremado', porcion: '¾ taza' }
-        ]
-      }
-    };
-
-    const MEALS = [
-      {
-        id: 'desayuno', label: 'Desayuno', emoji: '🌅',
-        slots: [
-          { grupo: 'verduras', n: 1 },
-          { grupo: 'cereales', n: 3 },
-          { grupo: 'leguminosas', n: 1 },
-          { grupo: 'aoa_mbag', n: 1 },
-          { grupo: 'aoa_mag', n: 1 },
-          { grupo: 'grasas', n: 2 }
-        ]
-      },
-      {
-        id: 'colacion1', label: 'Colación 1', emoji: '🍎',
-        slots: [{ grupo: 'frutas', n: 1 }]
-      },
-      {
-        id: 'comida', label: 'Comida', emoji: '🍽️',
-        slots: [
-          { grupo: 'verduras', n: 2 },
-          { grupo: 'cereales', n: 3 },
-          { grupo: 'leguminosas', n: 1 },
-          { grupo: 'aoa_bag', n: 2 },
-          { grupo: 'grasas', n: 2 }
-        ]
-      },
-      {
-        id: 'colacion2', label: 'Colación 2', emoji: '🥝',
-        slots: [{ grupo: 'frutas', n: 1 }]
-      },
-      {
-        id: 'cena', label: 'Cena', emoji: '🌙',
-        slots: [
-          { grupo: 'verduras', n: 1 },
-          { grupo: 'aoa_mbag', n: 1 },
-          { grupo: 'cereales', n: 2 },
-          { grupo: 'grasas', n: 2 }
-        ]
-      }
-    ];
+    let GRUPOS = {};
+    let MEALS = [];
+    let DIET_NAME = 'Dieta PETRA';
+    let RECOMENDACIONES = [];
 
     // ═══════════════════════════════════════════════════════════
     //  STATE
@@ -1094,9 +876,9 @@
     const _saved = JSON.parse(localStorage.getItem('petra_data') || 'null');
 
     const S = {
-      meal: 'desayuno',
-      selections: _saved?.selections || {},   // { mealId: { grupoId: [item, ...] } }
-      recipes: _saved?.recipes || {},   // { mealId: { title, html } }
+      meal: '',
+      selections: _saved?.selections || {},
+      recipes: _saved?.recipes || {},
       picked: new Set(),
       apiKey: localStorage.getItem('petra_key') || '',
     };
@@ -1149,6 +931,8 @@
       const m = meal(S.meal);
       const el = document.getElementById('content');
 
+      if (!m) { el.innerHTML = ''; return; }
+
       if (!sel) {
         el.innerHTML = `
       <div class="empty">
@@ -1167,7 +951,6 @@
 
       let html = `<p class="hint">${hintText}</p>`;
 
-      // ── Action bar: Todos + Reinicio ──
       html += `
     <div class="action-bar">
       <button class="action-btn" onclick="selectAll()">☑ Todos</button>
@@ -1198,7 +981,6 @@
       </div>`;
       });
 
-      // ── Recipe card (inline) ──
       const recipe = S.recipes[S.meal];
       if (recipe) {
         html += `
@@ -1245,7 +1027,6 @@
       const sel = S.selections[S.meal];
 
       if (!sel || S.picked.size === 0) {
-        // Full randomize — also clear saved recipe
         const result = {};
         m.slots.forEach(slot => {
           result[slot.grupo] = pick(grupo(slot.grupo).alimentos, slot.n);
@@ -1253,7 +1034,6 @@
         S.selections[S.meal] = result;
         delete S.recipes[S.meal];
       } else {
-        // Selective re-roll
         m.slots.forEach(slot => {
           const g = grupo(slot.grupo);
           const current = sel[slot.grupo] || [];
@@ -1268,7 +1048,6 @@
             S.picked.has(i.id) ? (fresh.shift() || i) : i
           );
         });
-        // Selective re-roll also invalidates recipe
         delete S.recipes[S.meal];
       }
 
@@ -1337,7 +1116,7 @@
       const item = grupo(grupoKey).alimentos.find(a => a.id === newId);
       if (!item) return;
       S.selections[S.meal][grupoKey][itemIndex] = item;
-      delete S.recipes[S.meal]; // invalidate recipe after swap
+      delete S.recipes[S.meal];
       saveState();
       closeOverlay('swapOverlay');
       renderContent();
@@ -1359,7 +1138,6 @@
         openSwapMenu(d.grupo, d.idx);
         return;
       }
-      // Check for recipe card right-click
       const rc = e.target.closest('.recipe-card[data-recipe-meal]');
       if (rc) {
         e.preventDefault();
@@ -1374,7 +1152,6 @@
         _lpTimer = setTimeout(() => { _lpFired = true; openSwapMenu(d.grupo, d.idx); }, 500);
         return;
       }
-      // Check for recipe card long-press
       const rc = e.target.closest('.recipe-card[data-recipe-meal]');
       if (rc) {
         _lpFired = false;
@@ -1407,7 +1184,6 @@
       const sel = S.selections[S.meal];
       if (!sel) return;
 
-      // If recipe already exists, just open it
       if (S.recipes[S.meal]) {
         openRecipeFS(S.meal);
         return;
@@ -1441,9 +1217,7 @@ Estructura tu respuesta exactamente así:
 
 Responde en español. Máximo 300 palabras.`;
 
-      // Show inline loading state
       const el = document.getElementById('content');
-      // Remove any existing recipe card and append loading
       const existingCard = el.querySelector('.recipe-card, .recipe-generating');
       if (existingCard) existingCard.remove();
       const loadEl = document.createElement('div');
@@ -1469,13 +1243,11 @@ Responde en español. Máximo 300 palabras.`;
 
         const text = data.candidates?.[0]?.content?.parts?.[0]?.text || 'No se pudo generar la receta.';
 
-        // Escape HTML FIRST, then apply formatting
         const safe = escapeHtml(text);
         const formatted = safe
           .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
           .replace(/\n/g, '<br>');
 
-        // Extract title (first line after 🍳)
         const titleMatch = text.match(/🍳\s*(.+)/);
         const title = titleMatch ? titleMatch[1].replace(/\*\*/g, '').trim() : `Receta de ${m.label}`;
 
@@ -1539,21 +1311,89 @@ Responde en español. Máximo 300 palabras.`;
     }
 
     // ═══════════════════════════════════════════════════════════
-    //  INIT
+    //  INIT — Load JSON and bootstrap app
     // ═══════════════════════════════════════════════════════════
 
-    renderTabs();
-    renderContent();
+    async function initApp() {
+      // Show loading state
+      document.getElementById('content').innerHTML = `
+        <div class="loading-center">
+          <div class="spin"></div>
+          <span>Cargando datos de la dieta…</span>
+        </div>`;
 
-    if (!S.apiKey) {
-      setTimeout(() => openSettings(), 600);
+      try {
+        const res = await fetch('dieta_petra.json');
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const json = await res.json();
+
+        // ── Populate GRUPOS from JSON ──
+        GRUPOS = json.grupos || {};
+
+        // ── Populate MEALS from JSON distribucion_comidas ──
+        MEALS = Object.entries(json.distribucion_comidas || {}).map(([key, mealDef]) => ({
+          id: mealDef.id || key,
+          label: mealDef.label || key,
+          emoji: mealDef.emoji || '🍽️',
+          slots: Object.entries(mealDef.porciones || {}).map(([grupoKey, n]) => ({
+            grupo: grupoKey,
+            n: n
+          }))
+        }));
+
+        // ── Set diet name dynamically ──
+        DIET_NAME = json.nombre || 'Dieta PETRA';
+        document.querySelector('.header-logo').textContent = `🥗 ${DIET_NAME}`;
+        document.title = DIET_NAME;
+
+        // ── Store recommendations ──
+        RECOMENDACIONES = json.recomendaciones || [];
+
+        // ── Set initial meal to first in list ──
+        if (MEALS.length > 0) {
+          S.meal = S.meal && MEALS.find(m => m.id === S.meal) ? S.meal : MEALS[0].id;
+        }
+
+        // ── Migrate old localStorage keys ──
+        // Old keys used 'grasas' and 'lacteos', new JSON uses
+        // 'grasas_sin_proteina' and 'lacteos_semidescremados'
+        if (_saved?.selections) {
+          const KEY_MAP = {
+            'grasas': 'grasas_sin_proteina',
+            'lacteos': 'lacteos_semidescremados'
+          };
+          Object.values(S.selections).forEach(sel => {
+            Object.entries(KEY_MAP).forEach(([oldKey, newKey]) => {
+              if (sel[oldKey] && !sel[newKey]) {
+                sel[newKey] = sel[oldKey];
+              }
+              delete sel[oldKey];
+            });
+          });
+          saveState();
+        }
+
+        // ── Render UI ──
+        renderTabs();
+        renderContent();
+
+        if (!S.apiKey) {
+          setTimeout(() => openSettings(), 600);
+        }
+
+      } catch (err) {
+        document.getElementById('content').innerHTML = `
+          <div class="empty">
+            <div class="empty-icon">⚠️</div>
+            <h2>Error al cargar</h2>
+            <p>No se pudo cargar <strong>dieta_petra.json</strong>.<br>${escapeHtml(err.message)}</p>
+          </div>`;
+        console.error('Error loading diet data:', err);
+      }
     }
 
-    // If previously saved data existed, remove lacteos selections (migration)
-    if (_saved?.selections) {
-      Object.values(S.selections).forEach(sel => { delete sel.lacteos; });
-      saveState();
-    }
+    // ── Start the app ──
+    initApp();
   </script>
 </body>
 
