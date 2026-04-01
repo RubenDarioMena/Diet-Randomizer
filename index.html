@@ -1285,6 +1285,9 @@ Responde en español. Máximo 300 palabras.`;
         const data = await res.json();
         if (data.error) throw new Error(data.error.message);
 
+        // ── Telemetry: API Success ──
+        sendTelemetryEvent("api_call", "success");
+
         const text = data.candidates?.[0]?.content?.parts?.[0]?.text || 'No se pudo generar la receta.';
 
         const safe = escapeHtml(text);
@@ -1300,6 +1303,9 @@ Responde en español. Máximo 300 palabras.`;
         renderContent();
 
       } catch (err) {
+        // ── Telemetry: API Error ──
+        sendTelemetryEvent("api_call", "error");
+
         if (loadEl.parentNode) loadEl.remove();
         const errEl = document.createElement('div');
         errEl.style.cssText = 'background:#FFF0F0;border-radius:10px;padding:14px;color:#B00;font-size:14px;line-height:1.55;margin-top:10px';
@@ -1412,6 +1418,9 @@ Responde en español. Máximo 300 palabras.`;
         const mealName = _printScope === 'current' && meal(S.meal) ? meal(S.meal).label.replace(/\s+/g, '') : 'Dia';
         const fileName = `Dieta_PETRA_${mealName}_${ds}.pdf`;
 
+        // ── Telemetry: PDF Export (any type) ──
+        sendTelemetryEvent("pdf_export", `${action}|${_printScope || "unknown"}`);
+
         if (action === 'download') {
           pdfDocGenerator.download(fileName);
           closeOverlay('printOverlay');
@@ -1465,13 +1474,13 @@ Responde en español. Máximo 300 palabras.`;
           content.push({
             table: { widths: ['*'], body: [[{ text: '' }]] },
             layout: {
-              hLineWidth: function(i) { return (i === 0) ? 1 : 0; },
-              vLineWidth: function() { return 0; },
-              hLineColor: function() { return '#E5DDD3'; },
-              paddingLeft: function() { return 0; },
-              paddingRight: function() { return 0; },
-              paddingTop: function() { return 0; },
-              paddingBottom: function() { return 0; }
+              hLineWidth: function (i) { return (i === 0) ? 1 : 0; },
+              vLineWidth: function () { return 0; },
+              hLineColor: function () { return '#E5DDD3'; },
+              paddingLeft: function () { return 0; },
+              paddingRight: function () { return 0; },
+              paddingTop: function () { return 0; },
+              paddingBottom: function () { return 0; }
             },
             margin: [0, 12, 0, 12]
           });
@@ -1480,9 +1489,9 @@ Responde en español. Máximo 300 palabras.`;
         const sel = S.selections[m.id] || {};
         const recipe = S.recipes[m.id];
         let hasItems = false;
-        
+
         m.slots.forEach(slot => {
-           if (sel[slot.grupo] && sel[slot.grupo].length > 0) hasItems = true;
+          if (sel[slot.grupo] && sel[slot.grupo].length > 0) hasItems = true;
         });
 
         const mealFlow = [];
@@ -1507,30 +1516,30 @@ Responde en español. Máximo 300 palabras.`;
         }
 
         if (recipe) {
-           mealFlow.push({ text: '\nReceta Generada\n', fontSize: 12, bold: true, color: '#C4713E' });
-           mealFlow.push({ text: recipe.title + '\n', fontSize: 13, bold: true });
-           mealFlow.push({ text: '\n', fontSize: 4 });
+          mealFlow.push({ text: '\nReceta Generada\n', fontSize: 12, bold: true, color: '#C4713E' });
+          mealFlow.push({ text: recipe.title + '\n', fontSize: 13, bold: true });
+          mealFlow.push({ text: '\n', fontSize: 4 });
 
-           const parts = recipe.html.split(/(<strong>.*?<\/strong>|<br\s*\/?>)/i);
-           parts.forEach(p => {
-             if (!p) return;
-             if (p.toLowerCase().match(/^<br\s*\/?>$/)) {
-               mealFlow.push({ text: '\n', fontSize: 11, lineHeight: 1.3 });
-             } else if (p.toLowerCase().startsWith('<strong>')) {
-               const inner = p.replace(/<\/?strong>/gi, '');
-               mealFlow.push({ text: inner, bold: true, color: '#2D6A4F', fontSize: 11, lineHeight: 1.3 });
-             } else {
-               mealFlow.push({ text: p, fontSize: 11, lineHeight: 1.3 });
-             }
-           });
-           mealFlow.push({ text: '\n' });
+          const parts = recipe.html.split(/(<strong>.*?<\/strong>|<br\s*\/?>)/i);
+          parts.forEach(p => {
+            if (!p) return;
+            if (p.toLowerCase().match(/^<br\s*\/?>$/)) {
+              mealFlow.push({ text: '\n', fontSize: 11, lineHeight: 1.3 });
+            } else if (p.toLowerCase().startsWith('<strong>')) {
+              const inner = p.replace(/<\/?strong>/gi, '');
+              mealFlow.push({ text: inner, bold: true, color: '#2D6A4F', fontSize: 11, lineHeight: 1.3 });
+            } else {
+              mealFlow.push({ text: p, fontSize: 11, lineHeight: 1.3 });
+            }
+          });
+          mealFlow.push({ text: '\n' });
         }
 
         if (mealFlow.length > 0) {
-           const last = mealFlow[mealFlow.length - 1];
-           if (last && typeof last.text === 'string') {
-             last.text = last.text.replace(/\n$/, '');
-           }
+          const last = mealFlow[mealFlow.length - 1];
+          if (last && typeof last.text === 'string') {
+            last.text = last.text.replace(/\n$/, '');
+          }
         }
 
         content.push(...mealFlow);
@@ -1543,6 +1552,38 @@ Responde en español. Máximo 300 palabras.`;
           font: 'Roboto'
         }
       };
+    }
+
+    // ═══════════════════════════════════════════════════════════
+    //  TELEMETRÍA (Google Sheets via Apps Script)
+    // ═══════════════════════════════════════════════════════════
+
+    const WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbyRUy_N2TeYTgFZDWqmMzxLrbNefSEMUHzo7659Exo-O_HV6Wx53YYbRtTnLBcsmHnG/exec";
+
+    function getOrCreateDeviceId() {
+      let deviceId = localStorage.getItem('petra_device_id');
+      if (!deviceId) {
+        deviceId = 'd_' + Math.random().toString(36).substring(2, 15) + Date.now().toString(36).substring(0, 8);
+        localStorage.setItem('petra_device_id', deviceId);
+      }
+      return deviceId;
+    }
+
+    function sendTelemetryEvent(eventType, status) {
+      const deviceId = getOrCreateDeviceId();
+      const timestamp = new Date().toISOString();
+
+      fetch(WEBHOOK_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify({
+          deviceId: deviceId,
+          eventType: eventType,
+          success: status,
+          timestamp: timestamp
+        })
+      }).catch(e => console.error("Telemetry error:", e));
     }
 
     // ═══════════════════════════════════════════════════════════
@@ -1611,6 +1652,9 @@ Responde en español. Máximo 300 palabras.`;
         // ── Render UI ──
         renderTabs();
         renderContent();
+
+        // ── Telemetry: App Open ──
+        sendTelemetryEvent("app_open", "N/A");
 
         if (!S.apiKey) {
           setTimeout(() => openSettings(), 600);
