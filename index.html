@@ -1527,10 +1527,13 @@ Responde en español. Máximo 300 palabras.`;
         }
 
         if (mealFlow.length > 0) {
-           mealFlow[mealFlow.length - 1].text = mealFlow[mealFlow.length - 1].text.replace(/\n$/, '');
+           const last = mealFlow[mealFlow.length - 1];
+           if (last && typeof last.text === 'string') {
+             last.text = last.text.replace(/\n$/, '');
+           }
         }
 
-        content.push({ text: mealFlow });
+        content.push(...mealFlow);
       });
 
       return {
