@@ -773,7 +773,10 @@
       <div class="header-logo">🥗 Dieta PETRA</div>
       <div class="header-sub">Plan nutricional personalizado</div>
     </div>
-    <button class="icon-btn" onclick="openSettings()" title="Configuración">⚙️</button>
+    <div style="display:flex; gap:8px;">
+      <button class="icon-btn" onclick="openPrintMenu()" title="Imprimir">🖨️</button>
+      <button class="icon-btn" onclick="openSettings()" title="Configuración">⚙️</button>
+    </div>
   </header>
 
   <!-- ────────── MEAL TABS ────────── -->
@@ -845,6 +848,43 @@
       </p>
       <button class="btn-full green" onclick="saveKey()">Guardar</button>
       <button class="btn-full ghost" onclick="closeOverlay('settingsOverlay')">Cancelar</button>
+    </div>
+  </div>
+
+  <!-- ────────── PRINT / EXPORT MODAL ────────── -->
+  <div class="overlay hidden" id="printOverlay" onclick="handleOverlayClick(event,'printOverlay')">
+    <div class="sheet">
+      <div class="sheet-handle"></div>
+      <div class="sheet-title" id="printTitle">🖨️ Exportar Dieta</div>
+
+      <div id="printStep1">
+        <p style="color:var(--muted);font-size:14px;margin:10px 0 16px;line-height:1.55">
+          ¿Qué deseas exportar a PDF?
+        </p>
+        <button class="btn-full ghost" onclick="selectPrintScope('current')">📄 Comida actual</button>
+        <button class="btn-full ghost" onclick="selectPrintScope('all')">🗓️ Todo el día</button>
+        <button class="btn-full" style="background:transparent; color:var(--muted); margin-top:8px"
+          onclick="closeOverlay('printOverlay')">Cancelar</button>
+      </div>
+
+      <div id="printStep2" style="display:none;">
+        <p style="color:var(--muted);font-size:14px;margin:10px 0 16px;line-height:1.55" id="printScopeLabel">
+          ¿Cómo deseas exportarlo?
+        </p>
+        <div id="exportButtons">
+          <button class="btn-full ghost" onclick="executeExport('download')">⬇️ Descargar PDF</button>
+          <button class="btn-full ghost" onclick="executeExport('open')">👁️ Abrir PDF</button>
+          <button class="btn-full ghost" onclick="executeExport('share')">📤 Compartir</button>
+          <button class="btn-full" style="background:transparent; color:var(--muted); margin-top:8px"
+            onclick="resetPrintMenu()">← Volver</button>
+        </div>
+
+        <div id="printSpinner"
+          style="display:none; flex-direction:column; align-items:center; gap:10px; padding: 20px 0;">
+          <div class="spin" style="border-top-color:var(--green)"></div>
+          <span style="color:var(--muted); font-size:14px; font-weight:600;">Generando documento...</span>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -996,7 +1036,11 @@
       }
 
       el.innerHTML = html;
-      document.getElementById('btnRecipe').disabled = false;
+
+      let totalItems = 0;
+      m.slots.forEach(slot => { totalItems += (sel[slot.grupo] || []).length; });
+      document.getElementById('btnRecipe').disabled = (totalItems <= 1);
+
       renderRandBtn();
     }
 
@@ -1308,6 +1352,194 @@ Responde en español. Máximo 300 palabras.`;
       if (key) localStorage.setItem('petra_key', key);
       else localStorage.removeItem('petra_key');
       closeOverlay('settingsOverlay');
+    }
+
+    // ═══════════════════════════════════════════════════════════
+    //  EXPORT / PRINT TO PDF (pdfmake)
+    // ═══════════════════════════════════════════════════════════
+
+    let _printScope = null;
+
+    function openPrintMenu() {
+      resetPrintMenu();
+      openOverlay('printOverlay');
+    }
+
+    function resetPrintMenu() {
+      _printScope = null;
+      document.getElementById('printStep1').style.display = 'block';
+      document.getElementById('printStep2').style.display = 'none';
+      document.getElementById('printSpinner').style.display = 'none';
+      document.getElementById('exportButtons').style.display = 'block';
+    }
+
+    function selectPrintScope(scope) {
+      _printScope = scope;
+      document.getElementById('printStep1').style.display = 'none';
+      document.getElementById('printStep2').style.display = 'block';
+
+      const label = scope === 'current' ? 'Exportar: Comida Actual' : 'Exportar: Todo el Día';
+      document.getElementById('printScopeLabel').textContent = label;
+    }
+
+    async function executeExport(action) {
+      document.getElementById('exportButtons').style.display = 'none';
+      document.getElementById('printSpinner').style.display = 'flex';
+
+      // Load pdfmake dynamically
+      if (typeof pdfMake === 'undefined') {
+        try {
+          await addScript('https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js');
+          await addScript('https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js');
+        } catch (e) {
+          alert("Error cargando la librería de impresión. Revisa tu conexión.");
+          resetPrintMenu();
+          return;
+        }
+      }
+
+      // Small delay to let spinner render
+      await new Promise(r => setTimeout(r, 50));
+
+      const docDefinition = buildPdfDocument(_printScope);
+      const pdfDocGenerator = pdfMake.createPdf(docDefinition);
+
+      pdfDocGenerator.getBlob((blob) => {
+        document.getElementById('printSpinner').style.display = 'none';
+        document.getElementById('exportButtons').style.display = 'block';
+
+        const ds = new Date().toISOString().slice(0, 10);
+        const mealName = _printScope === 'current' && meal(S.meal) ? meal(S.meal).label.replace(/\s+/g, '') : 'Dia';
+        const fileName = `Dieta_PETRA_${mealName}_${ds}.pdf`;
+
+        if (action === 'download') {
+          pdfDocGenerator.download(fileName);
+          closeOverlay('printOverlay');
+        } else if (action === 'open') {
+          const blobUrl = URL.createObjectURL(blob);
+          window.open(blobUrl, '_blank');
+          closeOverlay('printOverlay');
+        } else if (action === 'share') {
+          if (navigator.share) {
+            const file = new File([blob], fileName, { type: 'application/pdf' });
+            navigator.share({
+              title: 'Mi Dieta PETRA',
+              files: [file]
+            }).then(() => {
+              closeOverlay('printOverlay');
+            }).catch(err => console.log("Compartir cancelado o fallo:", err));
+          } else {
+            alert('Tu navegador no soporta compartir este archivo directamente. Usa las otras opciones.');
+          }
+        }
+      });
+    }
+
+    function addScript(src) {
+      return new Promise((resolve, reject) => {
+        const s = document.createElement('script');
+        s.src = src;
+        s.onload = resolve;
+        s.onerror = reject;
+        document.head.appendChild(s);
+      });
+    }
+
+    function buildPdfDocument(scope) {
+      const content = [];
+      const primaryColor = '#2D6A4F';
+
+      content.push({ text: DIET_NAME, fontSize: 22, bold: true, color: primaryColor, margin: [0, 0, 0, 4] });
+      content.push({ text: 'Plan Nutricional Personalizado', fontSize: 12, italics: true, color: '#7A6F62', margin: [0, 0, 0, 16] });
+
+      const mealsToExport = scope === 'current'
+        ? MEALS.filter(m => m.id === S.meal)
+        : MEALS.filter(m => S.selections[m.id] && Object.keys(S.selections[m.id]).length > 0);
+
+      if (mealsToExport.length === 0) {
+        content.push({ text: 'No hay alimentos seleccionados actualmente.', fontSize: 12, margin: [0, 8, 0, 0] });
+      }
+
+      mealsToExport.forEach((m, idx) => {
+        if (idx > 0) {
+          content.push({
+            table: { widths: ['*'], body: [[{ text: '' }]] },
+            layout: {
+              hLineWidth: function(i) { return (i === 0) ? 1 : 0; },
+              vLineWidth: function() { return 0; },
+              hLineColor: function() { return '#E5DDD3'; },
+              paddingLeft: function() { return 0; },
+              paddingRight: function() { return 0; },
+              paddingTop: function() { return 0; },
+              paddingBottom: function() { return 0; }
+            },
+            margin: [0, 12, 0, 12]
+          });
+        }
+
+        const sel = S.selections[m.id] || {};
+        const recipe = S.recipes[m.id];
+        let hasItems = false;
+        
+        m.slots.forEach(slot => {
+           if (sel[slot.grupo] && sel[slot.grupo].length > 0) hasItems = true;
+        });
+
+        const mealFlow = [];
+        mealFlow.push({ text: m.label + '\n', fontSize: 16, bold: true, color: primaryColor });
+        mealFlow.push({ text: '\n', fontSize: 2 });
+
+        if (hasItems) {
+          mealFlow.push({ text: 'Ingredientes:\n', fontSize: 12, bold: true });
+          mealFlow.push({ text: '\n', fontSize: 2 });
+          m.slots.forEach(slot => {
+            const g = grupo(slot.grupo);
+            const items = sel[slot.grupo] || [];
+            if (g && items.length > 0) {
+              const names = items.map(i => `${i.nombre} (${i.porcion})`).join(', ');
+              mealFlow.push({ text: '• ', color: primaryColor, bold: true });
+              mealFlow.push({ text: g.label.toUpperCase() + ': ', bold: true, color: '#7A6F62', fontSize: 10 });
+              mealFlow.push({ text: names + '\n', fontSize: 11, lineHeight: 1.3 });
+            }
+          });
+        } else {
+          mealFlow.push({ text: 'No hay ingredientes.\n', fontSize: 11, italics: true, color: '#999' });
+        }
+
+        if (recipe) {
+           mealFlow.push({ text: '\nReceta Generada\n', fontSize: 12, bold: true, color: '#C4713E' });
+           mealFlow.push({ text: recipe.title + '\n', fontSize: 13, bold: true });
+           mealFlow.push({ text: '\n', fontSize: 4 });
+
+           const parts = recipe.html.split(/(<strong>.*?<\/strong>|<br\s*\/?>)/i);
+           parts.forEach(p => {
+             if (!p) return;
+             if (p.toLowerCase().match(/^<br\s*\/?>$/)) {
+               mealFlow.push({ text: '\n', fontSize: 11, lineHeight: 1.3 });
+             } else if (p.toLowerCase().startsWith('<strong>')) {
+               const inner = p.replace(/<\/?strong>/gi, '');
+               mealFlow.push({ text: inner, bold: true, color: '#2D6A4F', fontSize: 11, lineHeight: 1.3 });
+             } else {
+               mealFlow.push({ text: p, fontSize: 11, lineHeight: 1.3 });
+             }
+           });
+           mealFlow.push({ text: '\n' });
+        }
+
+        if (mealFlow.length > 0) {
+           mealFlow[mealFlow.length - 1].text = mealFlow[mealFlow.length - 1].text.replace(/\n$/, '');
+        }
+
+        content.push({ text: mealFlow });
+      });
+
+      return {
+        content: content,
+        pageMargins: [35, 35, 35, 35],
+        defaultStyle: {
+          font: 'Roboto'
+        }
+      };
     }
 
     // ═══════════════════════════════════════════════════════════
