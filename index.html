@@ -560,6 +560,30 @@
       border: 2.5px solid var(--border);
     }
 
+    .btn-full.cancel-red {
+      border: 2.5px solid rgba(232, 112, 74, 0.85);
+      color: #C15533;
+      background:
+        linear-gradient(90deg,
+          rgba(232, 112, 74, 0.12) 0%,
+          rgba(232, 112, 74, 0.06) 40%,
+          rgba(232, 112, 74, 0.00) 100%
+        );
+      box-shadow:
+        10px 0 18px rgba(232, 112, 74, 0.14),
+        inset 0 0 0 1px rgba(232, 112, 74, 0.10),
+        inset 0 0 18px rgba(232, 112, 74, 0.06);
+    }
+
+    .btn-full.cancel-red:active {
+      background:
+        linear-gradient(90deg,
+          rgba(232, 112, 74, 0.16) 0%,
+          rgba(232, 112, 74, 0.08) 40%,
+          rgba(232, 112, 74, 0.00) 100%
+        );
+    }
+
     /* ── SPINNER ── */
     .spin {
       width: 28px;
@@ -780,6 +804,23 @@
       flex-shrink: 0;
     }
 
+    .recipe-fs-back.close-red {
+      border: 2px solid rgba(232, 112, 74, 0.85);
+      background:
+        linear-gradient(90deg,
+          rgba(232, 112, 74, 0.22) 0%,
+          rgba(232, 112, 74, 0.12) 55%,
+          rgba(232, 112, 74, 0.00) 100%
+        );
+      box-shadow:
+        10px 0 18px rgba(232, 112, 74, 0.16),
+        inset 0 0 0 1px rgba(232, 112, 74, 0.10),
+        inset 0 0 16px rgba(232, 112, 74, 0.08);
+      font-size: 20px;
+      line-height: 1;
+      font-weight: 900;
+    }
+
     .recipe-fs-back:active {
       background: rgba(255, 255, 255, 0.3);
     }
@@ -879,7 +920,7 @@
   <!-- ────────── FULLSCREEN RECIPE VIEW ────────── -->
   <div class="recipe-fullscreen hidden" id="recipeFullscreen">
     <div class="recipe-fs-header">
-      <button class="recipe-fs-back" onclick="closeRecipeFS()">←</button>
+      <button class="recipe-fs-back close-red" onclick="closeRecipeFS()">X</button>
       <div class="recipe-fs-title" id="recipeFsTitle">Receta</div>
     </div>
     <div class="recipe-fs-body" id="recipeFsBody"></div>
@@ -893,7 +934,7 @@
       <div class="confirm-body">
         <p>¿Quieres borrar la receta guardada?<br>Podrás generar una nueva con los mismos ingredientes.</p>
         <div class="confirm-btns">
-          <button class="btn-full ghost" onclick="closeOverlay('deleteRecipeOverlay')">No</button>
+          <button class="btn-full ghost cancel-red" onclick="closeOverlay('deleteRecipeOverlay')">No</button>
           <button class="btn-full green" onclick="confirmDeleteRecipe()">Sí, borrar</button>
         </div>
       </div>
@@ -909,7 +950,7 @@
         <p id="resetMealText">¿Estás seguro que quieres reiniciar todo el menú de esta comida?<br>Se borrarán los
           alimentos y la receta de esta sección.</p>
         <div class="confirm-btns">
-          <button class="btn-full ghost" onclick="closeOverlay('resetMealOverlay')">No, cancelar</button>
+          <button class="btn-full ghost cancel-red" onclick="closeOverlay('resetMealOverlay')">No, cancelar</button>
           <button class="btn-full green" style="background:#E8704A" onclick="confirmResetMeal()">Sí, reiniciar</button>
         </div>
       </div>
@@ -932,7 +973,7 @@
         <strong>console.cloud.google.com</strong> para mayor seguridad.
       </p>
       <button class="btn-full green" onclick="saveKey()">Guardar</button>
-      <button class="btn-full ghost" onclick="closeOverlay('settingsOverlay')">Cancelar</button>
+      <button class="btn-full ghost cancel-red" onclick="closeOverlay('settingsOverlay')">Cancelar</button>
     </div>
   </div>
 
@@ -948,7 +989,7 @@
         </p>
         <button class="btn-full ghost" onclick="selectPrintScope('current')">📄 Comida actual</button>
         <button class="btn-full ghost" onclick="selectPrintScope('all')">🗓️ Todo el día</button>
-        <button class="btn-full" style="background:transparent; color:var(--muted); margin-top:8px"
+        <button class="btn-full ghost cancel-red" style="margin-top:8px"
           onclick="closeOverlay('printOverlay')">Cancelar</button>
       </div>
 
@@ -960,7 +1001,7 @@
           <button class="btn-full ghost" onclick="executeExport('download')">⬇️ Descargar PDF</button>
           <button class="btn-full ghost" onclick="executeExport('open')">👁️ Abrir PDF</button>
           <button class="btn-full ghost" onclick="executeExport('share')">📤 Compartir</button>
-          <button class="btn-full" style="background:transparent; color:var(--muted); margin-top:8px"
+          <button class="btn-full ghost cancel-red" style="margin-top:8px"
             onclick="resetPrintMenu()">← Volver</button>
         </div>
 
@@ -980,7 +1021,7 @@
       <div class="sheet-title" id="swapTitle">🔄 Cambiar alimento</div>
       <div class="sheet-sub" id="swapSub">Selecciona un reemplazo</div>
       <div id="swapBody"></div>
-      <button class="btn-full ghost" style="margin-top:12px" onclick="closeOverlay('swapOverlay')">Cancelar</button>
+      <button class="btn-full ghost cancel-red" style="margin-top:12px" onclick="closeOverlay('swapOverlay')">Cancelar</button>
     </div>
   </div>
 
@@ -1054,12 +1095,16 @@
 
       return text.replace(regex, (match, ipart, frac) => {
         const intP = ipart ? ipart.trim() : '';
-        // const asciiFrac = _fracMap[frac]; 
 
-        // Prueba: usamos la fracción unicode original gigante
-        const fracStr = asHtml ? `<span class="frac">${frac}</span>` : frac;
-
-        return intP ? `${intP} ${fracStr}` : fracStr;
+        if (!asHtml) {
+          // Para PDF o texto plano, forzamos texto normal ya que la fuente puede no tener el símbolo "⅓"
+          const asciiFrac = _fracMap[frac];
+          return intP ? `${intP} ${asciiFrac}` : asciiFrac;
+        } else {
+          // Prueba: usamos la fracción unicode original gigante para el HTML
+          const fracStr = `<span class="frac">${frac}</span>`;
+          return intP ? `${intP} ${fracStr}` : fracStr;
+        }
       });
     }
 
@@ -1432,10 +1477,12 @@ Responde en español. Máximo 300 palabras.`;
       document.getElementById('recipeFsTitle').textContent = recipe.title;
       document.getElementById('recipeFsBody').innerHTML = `<div class="recipe-body">${recipe.html}</div>`;
       document.getElementById('recipeFullscreen').classList.remove('hidden');
+      _pushLayer('recipe');
     }
 
-    function closeRecipeFS() {
+    function closeRecipeFS(fromPop = false) {
       document.getElementById('recipeFullscreen').classList.add('hidden');
+      if (!fromPop) _popLayer();
     }
 
     function confirmDeleteRecipe() {
@@ -1449,8 +1496,19 @@ Responde en español. Máximo 300 palabras.`;
     //  MODALS
     // ═══════════════════════════════════════════════════════════
 
-    function openOverlay(id) { document.getElementById(id).classList.remove('hidden'); }
-    function closeOverlay(id) { document.getElementById(id).classList.add('hidden'); }
+    function openOverlay(id) {
+      const el = document.getElementById(id);
+      if (!el || !el.classList.contains('hidden')) return;
+      el.classList.remove('hidden');
+      _pushLayer(`overlay:${id}`);
+    }
+
+    function closeOverlay(id, fromPop = false) {
+      const el = document.getElementById(id);
+      if (!el || el.classList.contains('hidden')) return;
+      el.classList.add('hidden');
+      if (!fromPop) _popLayer();
+    }
 
     function handleOverlayClick(e, id) {
       if (e.target === document.getElementById(id)) closeOverlay(id);
@@ -1465,13 +1523,20 @@ Responde en español. Máximo 300 palabras.`;
       if (e) e.stopPropagation();
       const m = document.getElementById('headerMenu');
       if (!m) return;
+      const wasHidden = m.classList.contains('hidden');
       m.classList.toggle('hidden');
+      const isHidden = m.classList.contains('hidden');
+      if (wasHidden && !isHidden) _pushLayer('menu');
+      if (!wasHidden && isHidden) _popLayer();
       syncFontMenu();
     }
 
     function closeHeaderMenu() {
       const m = document.getElementById('headerMenu');
-      if (m && !m.classList.contains('hidden')) m.classList.add('hidden');
+      if (m && !m.classList.contains('hidden')) {
+        m.classList.add('hidden');
+        _popLayer();
+      }
     }
 
     function openSettingsFromMenu() {
@@ -1610,8 +1675,17 @@ Responde en español. Máximo 300 palabras.`;
       const content = [];
       const primaryColor = '#2D6A4F';
 
-      content.push({ text: DIET_NAME, fontSize: 22, bold: true, color: primaryColor, margin: [0, 0, 0, 4] });
-      content.push({ text: 'Plan Nutricional Personalizado', fontSize: 12, italics: true, color: '#7A6F62', margin: [0, 0, 0, 16] });
+      function stripEmoji(str) {
+        if (!str) return '';
+        return str
+          .replace(/[\u{1F300}-\u{1FAFF}]/gu, '')
+          .replace(/[\u{2600}-\u{27BF}]/gu, '')
+          .replace(/\s{2,}/g, ' ')
+          .trim();
+      }
+
+      content.push({ text: stripEmoji(DIET_NAME), fontSize: 24, bold: true, color: primaryColor, margin: [0, 0, 0, 4] });
+      content.push({ text: 'Plan Nutricional Personalizado', fontSize: 13, italics: true, color: '#7A6F62', margin: [0, 0, 0, 16] });
 
       const mealsToExport = scope === 'current'
         ? MEALS.filter(m => m.id === S.meal)
@@ -1647,41 +1721,41 @@ Responde en español. Máximo 300 palabras.`;
         });
 
         const mealFlow = [];
-        mealFlow.push({ text: m.label + '\n', fontSize: 16, bold: true, color: primaryColor });
+        mealFlow.push({ text: stripEmoji(m.label) + '\n', fontSize: 18, bold: true, color: primaryColor });
         mealFlow.push({ text: '\n', fontSize: 2 });
 
         if (hasItems) {
-          mealFlow.push({ text: 'Ingredientes:\n', fontSize: 12, bold: true });
+          mealFlow.push({ text: 'Ingredientes:\n', fontSize: 13, bold: true });
           mealFlow.push({ text: '\n', fontSize: 2 });
           m.slots.forEach(slot => {
             const g = grupo(slot.grupo);
             const items = sel[slot.grupo] || [];
             if (g && items.length > 0) {
               const names = items.map(i => `${i.nombre} (${formatPortion(i.porcion, false)})`).join(', ');
-              mealFlow.push({ text: '• ', color: primaryColor, bold: true });
-              mealFlow.push({ text: g.label.toUpperCase() + ': ', bold: true, color: '#7A6F62', fontSize: 10 });
-              mealFlow.push({ text: names + '\n', fontSize: 11, lineHeight: 1.3 });
+              mealFlow.push({ text: '- ', color: primaryColor, bold: true, fontSize: 12 });
+              mealFlow.push({ text: stripEmoji(g.label).toUpperCase() + ': ', bold: true, color: '#7A6F62', fontSize: 11 });
+              mealFlow.push({ text: stripEmoji(names) + '\n', fontSize: 12, lineHeight: 1.35 });
             }
           });
         } else {
-          mealFlow.push({ text: 'No hay ingredientes.\n', fontSize: 11, italics: true, color: '#999' });
+          mealFlow.push({ text: 'No hay ingredientes.\n', fontSize: 12, italics: true, color: '#999' });
         }
 
         if (recipe) {
-          mealFlow.push({ text: '\nReceta Generada\n', fontSize: 12, bold: true, color: '#C4713E' });
-          mealFlow.push({ text: recipe.title + '\n', fontSize: 13, bold: true });
+          mealFlow.push({ text: '\nReceta Generada\n', fontSize: 13, bold: true, color: '#C4713E' });
+          mealFlow.push({ text: stripEmoji(recipe.title) + '\n', fontSize: 14, bold: true });
           mealFlow.push({ text: '\n', fontSize: 4 });
 
           const parts = recipe.html.split(/(<strong>.*?<\/strong>|<br\s*\/?>)/i);
           parts.forEach(p => {
             if (!p) return;
             if (p.toLowerCase().match(/^<br\s*\/?>$/)) {
-              mealFlow.push({ text: '\n', fontSize: 11, lineHeight: 1.3 });
+              mealFlow.push({ text: '\n', fontSize: 12, lineHeight: 1.35 });
             } else if (p.toLowerCase().startsWith('<strong>')) {
               const inner = p.replace(/<\/?strong>/gi, '');
-              mealFlow.push({ text: inner, bold: true, color: '#2D6A4F', fontSize: 11, lineHeight: 1.3 });
+              mealFlow.push({ text: stripEmoji(inner), bold: true, color: '#2D6A4F', fontSize: 12, lineHeight: 1.35 });
             } else {
-              mealFlow.push({ text: p, fontSize: 11, lineHeight: 1.3 });
+              mealFlow.push({ text: stripEmoji(p), fontSize: 12, lineHeight: 1.35 });
             }
           });
           mealFlow.push({ text: '\n' });
@@ -1705,6 +1779,61 @@ Responde en español. Máximo 300 palabras.`;
         }
       };
     }
+
+    let _layerDepth = 0;
+    let _suppressPop = false;
+
+    function _pushLayer() {
+      history.pushState({ petraLayer: true }, '');
+      _layerDepth++;
+    }
+
+    function _popLayer() {
+      if (_layerDepth <= 0) return;
+      _suppressPop = true;
+      history.back();
+      _layerDepth--;
+    }
+
+    function _getOpenOverlayId() {
+      const ids = ['settingsOverlay', 'printOverlay', 'swapOverlay', 'resetMealOverlay', 'deleteRecipeOverlay'];
+      for (let i = 0; i < ids.length; i++) {
+        const el = document.getElementById(ids[i]);
+        if (el && !el.classList.contains('hidden')) return ids[i];
+      }
+      return null;
+    }
+
+    function _closeTopLayerFromPop() {
+      const recipeFs = document.getElementById('recipeFullscreen');
+      if (recipeFs && !recipeFs.classList.contains('hidden')) {
+        closeRecipeFS(true);
+        return;
+      }
+
+      const ov = _getOpenOverlayId();
+      if (ov) {
+        closeOverlay(ov, true);
+        return;
+      }
+
+      const menu = document.getElementById('headerMenu');
+      if (menu && !menu.classList.contains('hidden')) {
+        menu.classList.add('hidden');
+        return;
+      }
+    }
+
+    window.addEventListener('popstate', () => {
+      if (_suppressPop) {
+        _suppressPop = false;
+        return;
+      }
+      if (_layerDepth > 0) {
+        _layerDepth--;
+        _closeTopLayerFromPop();
+      }
+    });
 
     // ═══════════════════════════════════════════════════════════
     //  TELEMETRÍA (Google Sheets via Apps Script)
