@@ -101,6 +101,68 @@
       background: rgba(255, 255, 255, 0.3);
     }
 
+    .menu-wrap {
+      position: relative;
+      display: flex;
+    }
+
+    .menu {
+      position: absolute;
+      top: calc(100% + 8px);
+      right: 0;
+      min-width: 210px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      z-index: 350;
+      padding: 6px;
+      color: var(--text);
+    }
+
+    .menu.hidden {
+      display: none;
+    }
+
+    .menu-item {
+      width: 100%;
+      border: none;
+      background: transparent;
+      padding: 10px 10px;
+      border-radius: 10px;
+      text-align: left;
+      font-family: 'Nunito', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text);
+      cursor: pointer;
+    }
+
+    .menu-item:active {
+      background: rgba(45, 106, 79, 0.08);
+    }
+
+    .menu-divider {
+      height: 1px;
+      background: var(--border);
+      margin: 6px 6px;
+    }
+
+    body.font-large .chip-name {
+      font-size: 18px;
+      line-height: 1.25;
+    }
+
+    body.font-large .chip-portion {
+      font-size: 18px;
+    }
+
+    body.font-large .recipe-body,
+    body.font-large .recipe-fs-body .recipe-body {
+      font-size: 19px;
+      line-height: 1.85;
+    }
+
     /* ── MEAL TABS ── */
     .tabs {
       display: flex;
@@ -790,7 +852,15 @@
     </div>
     <div style="display:flex; gap:8px;">
       <button class="icon-btn" onclick="openPrintMenu()" title="Imprimir">🖨️</button>
-      <button class="icon-btn" onclick="openSettings()" title="Configuración">⚙️</button>
+      <div class="menu-wrap" id="headerMenuWrap">
+        <button class="icon-btn" onclick="toggleHeaderMenu(event)" title="Opciones">⚙️</button>
+        <div class="menu hidden" id="headerMenu">
+          <button class="menu-item" onclick="openSettingsFromMenu()">API Key</button>
+          <div class="menu-divider"></div>
+          <button class="menu-item" onclick="setFontSize('normal')" id="fontNormalBtn">Tamaño de letra: Normal</button>
+          <button class="menu-item" onclick="setFontSize('large')" id="fontLargeBtn">Tamaño de letra: Grande</button>
+        </div>
+      </div>
     </div>
   </header>
 
@@ -937,6 +1007,8 @@
       picked: new Set(),
       apiKey: localStorage.getItem('petra_key') || '',
     };
+
+    const FONT_PREF_KEY = 'petra_font';
 
     function saveState() {
       localStorage.setItem('petra_data', JSON.stringify({
@@ -1389,6 +1461,49 @@ Responde en español. Máximo 300 palabras.`;
       openOverlay('settingsOverlay');
     }
 
+    function toggleHeaderMenu(e) {
+      if (e) e.stopPropagation();
+      const m = document.getElementById('headerMenu');
+      if (!m) return;
+      m.classList.toggle('hidden');
+      syncFontMenu();
+    }
+
+    function closeHeaderMenu() {
+      const m = document.getElementById('headerMenu');
+      if (m && !m.classList.contains('hidden')) m.classList.add('hidden');
+    }
+
+    function openSettingsFromMenu() {
+      closeHeaderMenu();
+      openSettings();
+    }
+
+    function applyFontSize(mode) {
+      document.body.classList.toggle('font-large', mode === 'large');
+    }
+
+    function syncFontMenu() {
+      const mode = localStorage.getItem(FONT_PREF_KEY) || 'normal';
+      const n = document.getElementById('fontNormalBtn');
+      const g = document.getElementById('fontLargeBtn');
+      if (n) n.style.background = (mode === 'normal') ? 'rgba(45, 106, 79, 0.08)' : 'transparent';
+      if (g) g.style.background = (mode === 'large') ? 'rgba(45, 106, 79, 0.08)' : 'transparent';
+    }
+
+    function setFontSize(mode) {
+      localStorage.setItem(FONT_PREF_KEY, mode);
+      applyFontSize(mode);
+      syncFontMenu();
+      closeHeaderMenu();
+    }
+
+    document.addEventListener('click', (e) => {
+      const wrap = document.getElementById('headerMenuWrap');
+      if (!wrap) return;
+      if (!wrap.contains(e.target)) closeHeaderMenu();
+    });
+
     function saveKey() {
       const key = document.getElementById('keyInput').value.trim();
       S.apiKey = key;
@@ -1634,6 +1749,9 @@ Responde en español. Máximo 300 palabras.`;
           <div class="spin"></div>
           <span>Cargando datos de la dieta…</span>
         </div>`;
+
+      applyFontSize(localStorage.getItem(FONT_PREF_KEY) || 'normal');
+      syncFontMenu();
 
       try {
         const res = await fetch('dieta_petra.json');
